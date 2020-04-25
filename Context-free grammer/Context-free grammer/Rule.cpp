@@ -6,11 +6,12 @@ void Rule::copy(const Rule & other)
 	this->terminals = other.terminals;
 }
 
-Rule::Rule():terminals("")
+Rule::Rule() :terminals(std::vector<std::string>())
 {
 }
 
-Rule::Rule(const char variable, const std::string terminals) : variable(variable), terminals(terminals)
+Rule::Rule(const char variable, const std::vector<std::string> terminals) : variable(variable), 
+                                                                           terminals(terminals)
 {
 }
 
@@ -28,16 +29,6 @@ Rule * Rule::clone() const
 	return new Rule(*this);
 }
 
-char Rule::getVariable() const
-{
-	return this->variable;
-}
-
-std::string Rule::getTerminals() const
-{
-	return this->terminals;
-}
-
 Rule & Rule::operator=(const Rule & other)
 {
 	if (this != &other)
@@ -50,5 +41,10 @@ Rule & Rule::operator=(const Rule & other)
 
 void Rule::print() const
 {
-	std::cout << this->variable << "->" << this->terminals << std::endl;
+	std::cout << this->variable << " -> ";
+	for (size_t i = 0; i < terminals.size()-1; i++)
+	{
+		std::cout << this->terminals[i] << " | ";
+	}
+	std::cout << this->terminals[terminals.size()-1] ;
 }

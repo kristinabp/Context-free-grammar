@@ -12,12 +12,19 @@ class Grammar
 private: 
 	std::vector<Rule*> rules;
 	std::string id;
+	std::vector<char> variables;
+	std::vector<std::string> terminals;
+	char startVariable;
+
+	bool checkVariable(const char ch)const;
+	bool checkTerminal(const char ch)const;
 
 	void copy(const Grammar& other);
 
 public:
 	Grammar();
-	Grammar(const std::vector<Rule*> rules, const std::string id);
+	Grammar(const std::vector<Rule*> rules, const std::string id, const std::vector<char> variables,
+		    const std::vector<std::string> terminals, const char startVariable);
 	Grammar(const Grammar& other);
 	~Grammar();
 
@@ -25,6 +32,8 @@ public:
 
 	Grammar& addRule(Rule* rule);
 	void removeRule(int n);
+
+
 
 	void print()const;
 

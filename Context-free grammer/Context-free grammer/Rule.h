@@ -3,26 +3,23 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 class Rule
 {
 private:
 	char variable;
-	std::string terminals;
+	std::vector<std::string> terminals;
 
 	void copy(const Rule& other);
 
 public:
 	Rule();
-	Rule(const char variable, const std::string terminals);
+	Rule(const char variable, const std::vector<std::string> terminals);
 	Rule(const Rule& other);
 	~Rule();
 
 	Rule* clone() const;
-
-	char getVariable()const;
-	std::string getTerminals()const;
-
 
 	Rule& operator=(const Rule& other);
 
