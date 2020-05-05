@@ -1,12 +1,16 @@
-#include "Grammar.h"
+#include "GrammarSet.h"
 
 int main()
 {
 	Rule r1('S', { "ab", "K" });
 	Rule r2('K', { "kk", "K"});
-	Grammar g({ &r1, &r2 }, "XXX", { 'S', 'K' }, { "kk","ab" }, 'S');
-	//g.addRule(new Rule('S', { "ab", "K", "AK" })).addRule(new Rule('K', { "kk", "A" })).addRule(new Rule('A', { "a" }));
+	std::vector<Rule*> r;
+	r.push_back(new Rule(r1));
+	Grammar g(r, { "S","K" }, {'a', 'k', 'b'}, 'S');
+	g.addRule(&r1);
 	g.print();
-	
+	GrammarSet s;
+	s.addGrammar(&g);
+	s.save("1-K-1","grammar.txt");
 	return system("pause");
-}
+}  

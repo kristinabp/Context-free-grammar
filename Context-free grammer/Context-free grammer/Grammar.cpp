@@ -1,6 +1,8 @@
 #include "Grammar.h"
 
-bool Grammar::checkVariable(const char ch) const
+int Grammar::counter = 0;
+
+bool Grammar::checkTerminal (const char ch) const
 {
 	if (ch >= 'a' && ch <= 'z')
 	{
@@ -13,7 +15,7 @@ bool Grammar::checkVariable(const char ch) const
 	else return false;
 }
 
-bool Grammar::checkTerminal(const char ch) const
+bool Grammar::checkVariable(const char ch) const
 {
 	return ch>='A' && ch<='Z';
 }
@@ -27,17 +29,25 @@ void Grammar::copy(const Grammar & other)
 	this->startVariable = other.startVariable;
 }
 
-Grammar::Grammar(): rules(std::vector<Rule*>()), id("XXX-XXX"), variables(std::vector<char>()),
-                    terminals(std::vector<std::string> ())
+void Grammar::createId()
 {
-
+	std::string i = std::to_string(counter) + '-' + startVariable+ '-' + std::to_string(rules.size());
+	this->id = i;
 }
 
-Grammar::Grammar(const std::vector<Rule*> rules, const std::string id, const std::vector<char> variables,
-	             const std::vector<std::string> terminals, const char startVariable):rules(rules),id(id),
-	             variables(variables),terminals(terminals), startVariable(startVariable)
+Grammar::Grammar() : rules(std::vector<Rule*>()), id("X-X-X"), variables(std::vector<std::string>()), terminals(std::vector<char>()),
+					startVariable(' ')
 {
+}
 
+Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables, const std::vector<char> terminals, const char startVariable)
+{
+	this->rules = rules;
+	this->variables = variables;
+	this->terminals = terminals;
+	this->startVariable = startVariable;
+	this->counter++;
+	createId();
 }
 
 Grammar::Grammar(const Grammar & other)
@@ -59,41 +69,55 @@ Grammar & Grammar::operator=(const Grammar & other)
 	return *this;
 }
 
-Grammar & Grammar::addRule(Rule* rule)
+std::string Grammar::getId() const
 {
-	rules.push_back(rule->clone());
-	return *this;
+	return this->id;
 }
 
-void Grammar::removeRule(int n)
+Grammar * Grammar::clone() const
 {
-	for(int i=n-1; i<rules.size()-1; i++)
-	{ 
-		rules[i] = rules[i + 1];
+	return new Grammar(*this);
+}
+
+void Grammar::addRule(const Rule * r)
+{
+	this->rules.push_back(r->clone());
+}
+
+void Grammar::save(std::ostream & os)
+{
+	for (size_t i = 0; i < variables.size(); i++)
+	{
+		os << variables[i] << "\t";
 	}
-	rules.pop_back();
+	os << "\n";
+	for (size_t i = 0; i < terminals.size(); i++)
+	{
+		os << terminals[i] << "\t";
+	}
+	os << "\n";
+	for (size_t i = 0; i < rules.size(); i++)
+	{
+		rules[i]->print(os);
+		os << "\t";
+	}
 }
 
 void Grammar::print() const
 {
-	std::cout <<"G=({";
-	for (size_t i = 0; i < terminals.size()-1; i++)
-	{
-		std::cout << terminals[i] << ", ";
-	}
-	std::cout << terminals[terminals.size() - 1] ;
-	std::cout << "}, {";
-	for (size_t i = 0; i < variables.size()-1; i++)
+	for (size_t i = 0; i < variables.size(); i++)
 	{
 		std::cout << variables[i] << ", ";
 	}
-	std::cout << variables[variables.size() - 1];
-	std::cout << "}, " << this->startVariable<< " , {";
+	std::cout << "\t";
+	for (size_t i = 0; i < terminals.size(); i++)
+	{
+		std::cout << terminals[i] << ", ";
+	}
+	std::cout << "\t "<<startVariable << "\n";
 	for (size_t i = 0; i < rules.size(); i++)
 	{
-		std::cout << " " <<i + 1 << ".";
-		rules[i]->print();
+		rules[i]->print(std::cout);
 	}
-	std::cout << "})\n";
-	
+	std::cout << this->id;
 }

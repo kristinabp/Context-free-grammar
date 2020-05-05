@@ -19,11 +19,14 @@ public:
 	Rule(const Rule& other);
 	~Rule();
 
+	char getVariable()const;
+	std::vector<std::string> getTerminals()const;
+
 	Rule* clone() const;
 
 	Rule& operator=(const Rule& other);
 
-	void print()const;
+	void print(std::ostream& os)const;
 };
 #endif // !RULE_H
 

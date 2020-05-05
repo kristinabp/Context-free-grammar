@@ -24,6 +24,16 @@ Rule::~Rule()
 {
 }
 
+char Rule::getVariable() const
+{
+	return this->variable;
+}
+
+std::vector<std::string> Rule::getTerminals() const
+{
+	return this->terminals;
+}
+
 Rule * Rule::clone() const
 {
 	return new Rule(*this);
@@ -39,12 +49,12 @@ Rule & Rule::operator=(const Rule & other)
 	return *this;
 }
 
-void Rule::print() const
+void Rule::print(std::ostream& os) const
 {
-	std::cout << this->variable << " -> ";
+	os << this->variable << " -> ";
 	for (size_t i = 0; i < terminals.size()-1; i++)
 	{
-		std::cout << this->terminals[i] << " | ";
+		os << this->terminals[i] << " | ";
 	}
-	std::cout << this->terminals[terminals.size()-1] ;
+	os << this->terminals[terminals.size()-1] ;
 }
