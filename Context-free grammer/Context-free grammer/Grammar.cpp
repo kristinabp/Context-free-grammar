@@ -15,19 +15,6 @@ bool Grammar::checkTerminal (const char ch) const
 	else return false;
 }
 
-bool Grammar::checkExistingVariable(const char ch) const
-{
-	for (size_t i = 0; i < variables.size(); i++) 
-	{
-		if (variables[i] == ch)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
 bool Grammar::checkVariable(const char ch) const
 {
 	return ch>='A' && ch<='Z';
@@ -49,11 +36,12 @@ void Grammar::createId()
 }
 
 Grammar::Grammar() : rules(std::vector<Rule*>()), id("X-X"), variables(std::vector<char>()), terminals(std::vector<std::string>()),
-					startVariable("")
+					startVariable(' ')
 {
+	this->counter++;
 }
 
-Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<char> variables, const std::vector<std::string> terminals, const std::string startVariable)
+Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<char> variables, const std::vector<std::string> terminals, const char startVariable)
 {
 	this->rules = rules;
 	for (size_t i = 0; i < variables.size(); i++)
@@ -68,11 +56,74 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<char> variab
 			assert(false);
 		}
 	}
-	for (size_t i = 0; i < terminals.size(); i++)
+	bool check = false;
+	if (terminals.size() != 0)
 	{
-		if()
+		for (size_t i = 0; i < terminals.size(); i++)
+		{
+			for (size_t j = 0; j < terminals[i].size(); j++)
+			{
+				if (checkTerminal(terminals[i][j]))
+				{
+					continue;
+				}
+				else if (checkVariable(terminals[i][j]))
+				{
+					for (size_t k = 0; k < variables.size(); k++)
+					{
+						if (terminals[i][j] == variables[k])
+						{
+							check = true;
+						}
+					}
+				}
+				else
+				{
+					std::cout << "Incorrect terminals(terminal&variable).\n";
+					assert(false);
+				}
+			}
+
+			if (check)
+			{
+				this->terminals.push_back(terminals[i]);
+			}
+			else
+			{
+				std::cout << "Incorrect terminals(variable does not exist).\n";
+				assert(false);
+			}
+		}
 	}
-	this->startVariable = startVariable;
+	else
+	{
+	std::cout << "Empty terminals.\n";
+	assert(false);
+	}
+
+	bool flag = false;
+	if (checkVariable(startVariable))
+	{
+		for (size_t i = 0; i < variables.size(); i++)
+		{
+			if (variables[i] == startVariable)
+			{
+				this->startVariable = startVariable;
+				flag = true;
+			}
+		}
+
+		if (!flag)
+		{
+			std::cout << "Incorrect starting variable.Does not exist in variable set.\n";
+			assert(false);
+		}
+	}
+	else
+	{
+		std::cout << "Incorrect starting variable.\n";
+		assert(false);
+	}
 	this->counter++;
 	createId();
 }
@@ -108,6 +159,60 @@ Grammar * Grammar::clone() const
 
 void Grammar::addRule(const Rule * r)
 {
+	bool variableCheck = true;
+	if (checkVariable(r->getVariable()))
+	{
+		for (size_t i = 0; i < variables.size(); i++)
+		{
+			if (r->getVariable() == variables[i])
+			{
+				variableCheck = true;
+			}
+			else
+			{
+				variableCheck = false;
+			}
+		}
+	}
+	else
+	{
+		std::cout << "Incorrect variable.\n";
+		assert(false);
+	}
+
+	bool terminalCheck = true;
+	if (r->getTerminals().size() != 0)
+	{
+		for (size_t i = 0; i < r->getTerminals().size(); i++)
+		{
+			for (size_t j = 0; j < r->getTerminals()[i].size(); j++)
+			{
+				if (checkTerminal(r->getTerminals()[i][j]))
+				{
+					continue;
+				}
+				else if (checkVariable(r->getTerminals()[i][j]))
+				{
+					for (size_t k = 0; k < variables.size(); k++)
+					{
+						if (r->getTerminals()[i][j] == variables[k])
+						{
+							terminalCheck = true;
+						}
+						else
+						{
+							terminalCheck = false;
+						}
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		std::cout << "Empty terminals.\n";
+		assert(false);
+	}
 	this->rules.push_back(r->clone());
 }
 

@@ -99,8 +99,6 @@ void GrammarSet::addRule(const std::string id, const std::string rule)
 		{
 			if (grammarSet[i]->getId() == id)
 			{
-				if(grammarSet[i].)
-				break;
 			}
 		}
 	}
