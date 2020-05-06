@@ -15,6 +15,19 @@ bool Grammar::checkTerminal (const char ch) const
 	else return false;
 }
 
+bool Grammar::checkExistingVariable(const char ch) const
+{
+	for (size_t i = 0; i < variables.size(); i++) 
+	{
+		if (variables[i] == ch)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool Grammar::checkVariable(const char ch) const
 {
 	return ch>='A' && ch<='Z';
@@ -31,20 +44,34 @@ void Grammar::copy(const Grammar & other)
 
 void Grammar::createId()
 {
-	std::string i = std::to_string(counter) + '-' + startVariable+ '-' + std::to_string(rules.size());
+	std::string i = std::to_string(counter) + '-' + startVariable;
 	this->id = i;
 }
 
-Grammar::Grammar() : rules(std::vector<Rule*>()), id("X-X-X"), variables(std::vector<std::string>()), terminals(std::vector<char>()),
-					startVariable(' ')
+Grammar::Grammar() : rules(std::vector<Rule*>()), id("X-X"), variables(std::vector<char>()), terminals(std::vector<std::string>()),
+					startVariable("")
 {
 }
 
-Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables, const std::vector<char> terminals, const char startVariable)
+Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<char> variables, const std::vector<std::string> terminals, const std::string startVariable)
 {
 	this->rules = rules;
-	this->variables = variables;
-	this->terminals = terminals;
+	for (size_t i = 0; i < variables.size(); i++)
+	{
+		if (checkVariable(variables[i]))
+		{
+			this->variables.push_back(variables[i]);
+		}
+		else
+		{
+			std::cout << "Incorrect variables set.\n";
+			assert(false);
+		}
+	}
+	for (size_t i = 0; i < terminals.size(); i++)
+	{
+		if()
+	}
 	this->startVariable = startVariable;
 	this->counter++;
 	createId();
@@ -84,6 +111,26 @@ void Grammar::addRule(const Rule * r)
 	this->rules.push_back(r->clone());
 }
 
+void Grammar::removeRule(int index)
+{
+	if (index<rules.size() || index>rules.size())
+	{
+		for (size_t i = 0; i < rules.size(); i++)
+		{
+			if (index == i)
+			{
+				rules.erase(rules.begin() + i);
+				std::cout << "Rule removed.\n";
+			}
+			break;
+		}
+	}
+	else
+	{
+		std::cout << "Incorrect index.\n";
+	}
+}
+
 void Grammar::save(std::ostream & os)
 {
 	for (size_t i = 0; i < variables.size(); i++)
@@ -118,6 +165,7 @@ void Grammar::print() const
 	for (size_t i = 0; i < rules.size(); i++)
 	{
 		rules[i]->print(std::cout);
+		std::cout << "\n";
 	}
-	std::cout << this->id;
+	std::cout << this->id<< "\n";
 }

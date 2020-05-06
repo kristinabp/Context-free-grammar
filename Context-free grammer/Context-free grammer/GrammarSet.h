@@ -17,10 +17,10 @@ public:
 	void addGrammar(const Grammar* grammar);
 
 	void list();
-	void print(std::string id);
-	void save(std::string id, std::string fileName);
-	void addRule(std::string id, const Rule& rule);
-	void removeRule(std::string id, const Rule& rule);
+	void print(const std::string id);
+	void save(const std::string id, const std::string fileName);
+	void addRule(const std::string id, const std::string rule);
+	void removeRule(const std::string id, int index);
 
 };
 #endif // !GRAMMARSET_H

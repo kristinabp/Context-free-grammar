@@ -62,3 +62,59 @@ void GrammarSet::save(std::string id, std::string fileName)
 		std::cout << "Couldn't open " << fileName << "\n";
 	}
 }
+
+void GrammarSet::addRule(const std::string id, const std::string rule)
+{
+	if (rule == "")
+	{
+		std::cout << "Incorrect input.\n";
+	}
+
+	if (!rule.find("->"))
+	{
+		std::cout << "Incorrect input.\n";
+	}
+
+	std::string firstPart, secondPart;
+	int i = 0;
+	while (rule[i] != '-')
+	{
+		firstPart.push_back(rule[i]);
+		i++;
+	}
+	i += 2;
+	while (i < rule.size())
+	{
+		secondPart.push_back(rule[i]);
+		i++;
+	}
+
+	if (firstPart.size() >= 2)
+	{
+		std::cout << "Incorrect input.\n";
+	}
+	else
+	{
+		for (size_t i = 0; i < grammarSet.size(); i++)
+		{
+			if (grammarSet[i]->getId() == id)
+			{
+				if(grammarSet[i].)
+				break;
+			}
+		}
+	}
+}
+
+void GrammarSet::removeRule(std::string id, int index)
+{
+	for (size_t i = 0; i < grammarSet.size(); i++)
+	{
+		if (grammarSet[i]->getId() == id)
+		{
+			grammarSet[i]->removeRule(index-1);
+			break;
+		}
+	}
+	std::cout << "Incorrect Id\n";
+}
