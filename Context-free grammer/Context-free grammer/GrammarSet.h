@@ -16,6 +16,12 @@ public:
 
 	void addGrammar(const Grammar* grammar);
 
+	void help();
+	void open(std::string fileName);
+	void close();
+	void saveAs(std::string fileName);
+	void exit();
+
 	void list();
 	void print(const std::string id);
 	void save(const std::string id, const std::string fileName);

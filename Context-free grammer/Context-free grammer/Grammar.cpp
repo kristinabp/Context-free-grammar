@@ -56,49 +56,50 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<char> variab
 			assert(false);
 		}
 	}
-	bool check = false;
-	if (terminals.size() != 0)
+	bool check = true;
+	for (size_t i = 0; i < terminals.size(); i++)
 	{
-		for (size_t i = 0; i < terminals.size(); i++)
+		for (size_t j = 0; j < terminals[i].size(); j++)
 		{
-			for (size_t j = 0; j < terminals[i].size(); j++)
+			if (checkTerminal(terminals[i][j]))
 			{
-				if (checkTerminal(terminals[i][j]))
+				continue;
+			}
+			else if (checkVariable(terminals[i][j]))
+			{
+				for (size_t k = 0; k < variables.size(); k++)
 				{
-					continue;
-				}
-				else if (checkVariable(terminals[i][j]))
-				{
-					for (size_t k = 0; k < variables.size(); k++)
+					if (terminals[i][j] == variables[k])
 					{
-						if (terminals[i][j] == variables[k])
-						{
-							check = true;
-						}
+						check = true;
+						break;
+					}
+					else
+					{
+						check = false;
 					}
 				}
-				else
+				if (!check)
 				{
-					std::cout << "Incorrect terminals(terminal&variable).\n";
-					assert(false);
+					break;
 				}
-			}
-
-			if (check)
-			{
-				this->terminals.push_back(terminals[i]);
 			}
 			else
 			{
-				std::cout << "Incorrect terminals(variable does not exist).\n";
+				std::cout << "Incorrect terminals(terminal&variable).\n";
 				assert(false);
 			}
 		}
-	}
-	else
-	{
-	std::cout << "Empty terminals.\n";
-	assert(false);
+
+		if (check)
+		{
+			this->terminals.push_back(terminals[i]);
+		}
+		else
+		{
+			std::cout << "Incorrect terminals(variable does not exist).\n";
+			assert(false);
+		}
 	}
 
 	bool flag = false;
@@ -167,6 +168,7 @@ void Grammar::addRule(const Rule * r)
 			if (r->getVariable() == variables[i])
 			{
 				variableCheck = true;
+				break;
 			}
 			else
 			{
@@ -198,12 +200,23 @@ void Grammar::addRule(const Rule * r)
 						if (r->getTerminals()[i][j] == variables[k])
 						{
 							terminalCheck = true;
+							break;
 						}
 						else
 						{
 							terminalCheck = false;
 						}
 					}
+
+					if (!terminalCheck)
+					{
+						break;
+					}
+				}
+				else
+				{
+					std::cout << "Incorrect terminals.\n";
+					assert(false);
 				}
 			}
 		}
@@ -213,21 +226,35 @@ void Grammar::addRule(const Rule * r)
 		std::cout << "Empty terminals.\n";
 		assert(false);
 	}
-	this->rules.push_back(r->clone());
+
+	if (variableCheck && terminalCheck)
+	{
+		for (size_t i = 0; i < r->getTerminals().size(); i++)
+		{
+			this->terminals.push_back(r->getTerminals()[i]);
+		}
+		this->rules.push_back(r->clone());
+	}
+	else
+	{
+		std::cout << terminalCheck << variableCheck;
+		std::cout << "Incorrect rule.\n";
+		assert(false);
+	}
 }
 
 void Grammar::removeRule(int index)
 {
-	if (index<rules.size() || index>rules.size())
+	if (index<=rules.size())
 	{
 		for (size_t i = 0; i < rules.size(); i++)
 		{
-			if (index == i)
+			if (index-1 == i)
 			{
 				rules.erase(rules.begin() + i);
 				std::cout << "Rule removed.\n";
+				break;
 			}
-			break;
 		}
 	}
 	else
@@ -257,20 +284,30 @@ void Grammar::save(std::ostream & os)
 
 void Grammar::print() const
 {
-	for (size_t i = 0; i < variables.size(); i++)
+	if (variables.size() > 1)
 	{
-		std::cout << variables[i] << ", ";
+		for (size_t i = 0; i < variables.size() - 1; i++)
+		{
+			std::cout << variables[i] << ", ";
+		}
 	}
-	std::cout << "\t";
-	for (size_t i = 0; i < terminals.size(); i++)
+	std::cout << variables[variables.size()-1] << "\t";
+	if (terminals.size() > 1)
 	{
-		std::cout << terminals[i] << ", ";
+		for (size_t i = 0; i < terminals.size() - 1; i++)
+		{
+			std::cout << terminals[i] << ", ";
+		}
+	}
+	if (!terminals.size() == 0)
+	{
+		std::cout << terminals[terminals.size() - 1];
 	}
 	std::cout << "\t "<<startVariable << "\n";
 	for (size_t i = 0; i < rules.size(); i++)
 	{
+		std::cout << i + 1 << ".";
 		rules[i]->print(std::cout);
 		std::cout << "\n";
 	}
-	std::cout << this->id<< "\n";
 }

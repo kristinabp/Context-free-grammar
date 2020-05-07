@@ -14,6 +14,30 @@ void GrammarSet::addGrammar(const Grammar * grammar)
 	this->grammarSet.push_back(grammar->clone());
 }
 
+void GrammarSet::help()
+{
+	std::cout << "> help\n";
+	std::cout << "------ The following commands are supported : -------------------------------------------------\n";
+	std::cout << "|open <file>				opens <file>\n";
+	std::cout << "|close					closes currently opened file\n";
+	std::cout << "|save <id> <fileName>			saves a grammar in a file\n";
+	std::cout << "|saveas <file>				saves the currently open file in <file>\n";
+	std::cout << "|help					prints this information\n";
+	std::cout << "|exit					exists the program\n";
+	std::cout << "|addgrammar <grammarName>		adds new grammar\n";
+	std::cout << "|list 					lists all grammar ids\n";
+	std::cout << "|print <id>				prints a grammar\n";
+	std::cout << "|addRule <id> <rule> 			adds a new rule\n";
+	std::cout << "|removeRule <id> <n> 			removes a rule with a number\n";
+	std::cout << "-----------------------------------------------------------------------------------------------\n";
+}
+
+void GrammarSet::exit()
+{
+	std::cout << "> exit\n";
+	std::cout << "Exiting the program...\n";
+}
+
 void GrammarSet::list()
 {
 	for (size_t i = 0; i < grammarSet.size(); i++)
@@ -75,7 +99,8 @@ void GrammarSet::addRule(const std::string id, const std::string rule)
 		std::cout << "Incorrect input.\n";
 	}
 
-	std::string firstPart, secondPart;
+	std::string firstPart, curr;
+	std::vector<std::string> secondPart;
 	int i = 0;
 	while (rule[i] != '-')
 	{
@@ -85,10 +110,17 @@ void GrammarSet::addRule(const std::string id, const std::string rule)
 	i += 2;
 	while (i < rule.size())
 	{
-		secondPart.push_back(rule[i]);
+		while (rule[i] != '|' && i < rule.size())
+		{
+			curr.push_back(rule[i]);
+			i++;
+		}
+		secondPart.push_back(curr);
+		curr = "";
 		i++;
 	}
 
+	bool findGrammar = true;
 	if (firstPart.size() >= 2)
 	{
 		std::cout << "Incorrect input.\n";
@@ -99,20 +131,49 @@ void GrammarSet::addRule(const std::string id, const std::string rule)
 		{
 			if (grammarSet[i]->getId() == id)
 			{
+				findGrammar = true;
+				grammarSet[i]->addRule(new Rule(firstPart[0],secondPart));
+				break;
 			}
+			else
+			{
+				findGrammar = false;
+			}
+		}
+		if (findGrammar)
+		{
+			std::cout << "Sucessfully added rule " << firstPart << " -> ";
+			for (size_t i = 0; i < secondPart.size(); i++)
+			{
+				std::cout << secondPart[i] << " | ";
+			}
+			std::cout << std:: endl;
+		}
+		else
+		{
+			std::cout << "Couldn't find grammar with this id.\n";
 		}
 	}
 }
 
 void GrammarSet::removeRule(std::string id, int index)
 {
+	bool flag = true;
 	for (size_t i = 0; i < grammarSet.size(); i++)
 	{
 		if (grammarSet[i]->getId() == id)
 		{
-			grammarSet[i]->removeRule(index-1);
+			grammarSet[i]->removeRule(index);
+			flag = true;
 			break;
 		}
+		else
+		{
+			flag = false;
+		}
 	}
-	std::cout << "Incorrect Id\n";
+	if (!flag)
+	{
+		std::cout << "Incorrect Id.\n";
+	}
 }
