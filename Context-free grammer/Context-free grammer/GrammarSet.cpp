@@ -177,3 +177,55 @@ void GrammarSet::removeRule(std::string id, int index)
 		std::cout << "Incorrect Id.\n";
 	}
 }
+
+void GrammarSet::unionn(const std::string & id1, const std::string & id2)
+{
+	if (id1 == id2)
+	{
+		std::cout << "Try to union the same grammars grammar.\n";
+		assert(false);
+	}
+
+	//first step: arrange it so the two grammars have no variables(non-terminals) in common
+
+	
+	Grammar* newGrammar=nullptr;
+	Grammar* firstGrammar = nullptr;
+	Grammar* secondGrammar=nullptr;
+	for (size_t i = 0; i < grammarSet.size(); i++)
+	{
+		if (grammarSet[i]->getId() == id1)
+		{
+			firstGrammar = grammarSet[i];
+			break;
+		}
+	}
+
+	for (size_t i = 0; i < grammarSet.size(); i++)
+	{
+		if (grammarSet[i]->getId() == id2)
+		{
+			secondGrammar = grammarSet[i];
+			break;
+		}
+	}
+	std::vector<std::string> firstVar;
+	for (size_t i = 0; i < firstGrammar->getVariables().size(); i++)
+	{
+		firstVar.push_back(firstGrammar->getVariables()[i]);
+	}
+	
+	for (size_t i = 0; i < secondGrammar->getVariables().size(); i++)
+	{
+		if (std::find(firstVar.begin(), firstVar.end(), secondGrammar->getVariables()[i]) != firstVar.end())
+		{
+			newGrammar->addNewVariable(secondGrammar->getVariables()[i] + "2");
+		}
+		else
+		{
+			newGrammar->addNewVariable(secondGrammar->getVariables()[i]);
+		}
+	}
+
+	newGrammar->print();
+}

@@ -27,6 +27,7 @@ public:
 	void save(const std::string id, const std::string fileName);
 	void addRule(const std::string id, const std::string rule);
 	void removeRule(const std::string id, int index);
+	void unionn(const std::string& id1, const std::string& id2);
 
 };
 #endif // !GRAMMARSET_H

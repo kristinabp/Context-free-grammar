@@ -15,9 +15,14 @@ bool Grammar::checkTerminal (const char ch) const
 	else return false;
 }
 
-bool Grammar::checkVariable(const char ch) const
+bool Grammar::checkUpper(const char ch) const
 {
-	return ch>='A' && ch<='Z';
+	return ch >= 'A' && ch <= 'Z';
+}
+
+bool Grammar::checkVariable(const std::string ch) const
+{
+	return ch[0]>='A' && ch[0]<='Z';
 }
 
 void Grammar::copy(const Grammar & other)
@@ -35,13 +40,13 @@ void Grammar::createId()
 	this->id = i;
 }
 
-Grammar::Grammar() : rules(std::vector<Rule*>()), id("X-X"), variables(std::vector<char>()), terminals(std::vector<std::string>()),
+Grammar::Grammar() : rules(std::vector<Rule*>()), id("X-X"), variables(std::vector<std::string>()), terminals(std::vector<std::string>()),
 					startVariable(' ')
 {
 	this->counter++;
 }
 
-Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<char> variables, const std::vector<std::string> terminals, const char startVariable)
+Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables, const std::vector<std::string> terminals, const char startVariable)
 {
 	this->rules = rules;
 	for (size_t i = 0; i < variables.size(); i++)
@@ -65,11 +70,11 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<char> variab
 			{
 				continue;
 			}
-			else if (checkVariable(terminals[i][j]))
+			else if (checkUpper(terminals[i][j]))
 			{
 				for (size_t k = 0; k < variables.size(); k++)
 				{
-					if (terminals[i][j] == variables[k])
+					if (terminals[i][j] == variables[k][0])
 					{
 						check = true;
 						break;
@@ -103,11 +108,11 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<char> variab
 	}
 
 	bool flag = false;
-	if (checkVariable(startVariable))
+	if (checkUpper(startVariable))
 	{
 		for (size_t i = 0; i < variables.size(); i++)
 		{
-			if (variables[i] == startVariable)
+			if (variables[i][0] == startVariable)
 			{
 				this->startVariable = startVariable;
 				flag = true;
@@ -153,6 +158,39 @@ std::string Grammar::getId() const
 	return this->id;
 }
 
+std::vector<std::string> Grammar::getVariables() const
+{
+	return this->variables;
+}
+
+std::vector<std::string> Grammar::getTerminals() const
+{
+	return this->terminals;
+}
+
+void Grammar::addNewVariable(const std::string & var)
+{
+	this->variables.push_back(var);
+}
+
+//void Grammar::setNewVariableName(size_t index, const char var)
+//{
+//	this->variables[index] = this->variables[index] + '2';
+//
+//	//update terminals with the new variable
+//	for (size_t i = 0; i < terminals.size(); i++)
+//	{
+//		for (size_t j = 0; j < terminals[i].size(); j++)
+//		{
+//			if (terminals[i][j] == var)
+//			{
+//				
+//				terminals[i].insert(j + 1, "2");
+//			}
+//		}
+//	}
+//}
+
 Grammar * Grammar::clone() const
 {
 	return new Grammar(*this);
@@ -161,11 +199,11 @@ Grammar * Grammar::clone() const
 void Grammar::addRule(const Rule * r)
 {
 	bool variableCheck = true;
-	if (checkVariable(r->getVariable()))
+	if (checkUpper(r->getVariable()))
 	{
 		for (size_t i = 0; i < variables.size(); i++)
 		{
-			if (r->getVariable() == variables[i])
+			if (r->getVariable() == variables[i][0])
 			{
 				variableCheck = true;
 				break;
@@ -193,11 +231,11 @@ void Grammar::addRule(const Rule * r)
 				{
 					continue;
 				}
-				else if (checkVariable(r->getTerminals()[i][j]))
+				else if (checkUpper(r->getTerminals()[i][j]))
 				{
 					for (size_t k = 0; k < variables.size(); k++)
 					{
-						if (r->getTerminals()[i][j] == variables[k])
+						if (r->getTerminals()[i][j] == variables[k][0])
 						{
 							terminalCheck = true;
 							break;
