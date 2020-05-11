@@ -15,6 +15,18 @@ bool Grammar::checkTerminal (const char ch) const
 	else return false;
 }
 
+bool Grammar::checkTerminalSet(const char ch) const
+{
+	for (size_t i = 0; i < terminals.size(); i++)
+	{
+		if (ch == terminals[i])
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 bool Grammar::checkUpper(const char ch) const
 {
 	return ch >= 'A' && ch <= 'Z';
@@ -40,13 +52,13 @@ void Grammar::createId()
 	this->id = i;
 }
 
-Grammar::Grammar() : rules(std::vector<Rule*>()), id("X-X"), variables(std::vector<std::string>()), terminals(std::vector<std::string>()),
+Grammar::Grammar() : rules(std::vector<Rule*>()), id("X-X"), variables(std::vector<std::string>()), terminals(std::vector<char>()),
 					startVariable(' ')
 {
 	this->counter++;
 }
 
-Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables, const std::vector<std::string> terminals, const char startVariable)
+Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables, const std::vector<char> terminals, const char startVariable)
 {
 	this->rules = rules;
 	for (size_t i = 0; i < variables.size(); i++)
@@ -61,20 +73,33 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string>
 			assert(false);
 		}
 	}
-	bool check = true;
+
 	for (size_t i = 0; i < terminals.size(); i++)
 	{
-		for (size_t j = 0; j < terminals[i].size(); j++)
+		if (checkTerminal(terminals[i]))
 		{
-			if (checkTerminal(terminals[i][j]))
+			this->terminals.push_back(terminals[i]);
+		}
+		else
+		{
+			std::cout << "Incorrect terminals set.\n";
+			assert(false);
+		}
+	}
+	/*bool check = true;
+	for (size_t i = 0; i < productions.size(); i++)
+	{
+		for (size_t j = 0; j < productions[i].size(); j++)
+		{
+			if (checkTerminal(productions[i][j]))
 			{
 				continue;
 			}
-			else if (checkUpper(terminals[i][j]))
+			else if (checkUpper(productions[i][j]))
 			{
 				for (size_t k = 0; k < variables.size(); k++)
 				{
-					if (terminals[i][j] == variables[k][0])
+					if (productions[i][j] == variables[k][0])
 					{
 						check = true;
 						break;
@@ -98,7 +123,7 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string>
 
 		if (check)
 		{
-			this->terminals.push_back(terminals[i]);
+			this->productions.push_back(productions[i]);
 		}
 		else
 		{
@@ -106,7 +131,7 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string>
 			assert(false);
 		}
 	}
-
+*/
 	bool flag = false;
 	if (checkUpper(startVariable))
 	{
@@ -163,7 +188,7 @@ std::vector<std::string> Grammar::getVariables() const
 	return this->variables;
 }
 
-std::vector<std::string> Grammar::getTerminals() const
+std::vector<char> Grammar::getTerminals() const
 {
 	return this->terminals;
 }
@@ -220,40 +245,40 @@ void Grammar::addRule(const Rule * r)
 		assert(false);
 	}
 
-	bool terminalCheck = true;
-	if (r->getTerminals().size() != 0)
+	bool productionCheck = true;
+	if (r->getProduction().size() != 0)
 	{
-		for (size_t i = 0; i < r->getTerminals().size(); i++)
+		for (size_t i = 0; i < r->getProduction().size(); i++)
 		{
-			for (size_t j = 0; j < r->getTerminals()[i].size(); j++)
+			for (size_t j = 0; j < r->getProduction()[i].size(); j++)
 			{
-				if (checkTerminal(r->getTerminals()[i][j]))
+				if (checkTerminalSet(r->getProduction()[i][j]))
 				{
 					continue;
 				}
-				else if (checkUpper(r->getTerminals()[i][j]))
+				else if (checkUpper(r->getProduction()[i][j]))
 				{
 					for (size_t k = 0; k < variables.size(); k++)
 					{
-						if (r->getTerminals()[i][j] == variables[k][0])
+						if (r->getProduction()[i][j] == variables[k][0])
 						{
-							terminalCheck = true;
+							productionCheck = true;
 							break;
 						}
 						else
 						{
-							terminalCheck = false;
+							productionCheck = false;
 						}
 					}
 
-					if (!terminalCheck)
+					if (!productionCheck)
 					{
 						break;
 					}
 				}
 				else
 				{
-					std::cout << "Incorrect terminals.\n";
+					std::cout << "Incorrect productions.\n";
 					assert(false);
 				}
 			}
@@ -261,21 +286,16 @@ void Grammar::addRule(const Rule * r)
 	}
 	else
 	{
-		std::cout << "Empty terminals.\n";
+		std::cout << "Empty productions.\n";
 		assert(false);
 	}
 
-	if (variableCheck && terminalCheck)
+	if (variableCheck && productionCheck)
 	{
-		for (size_t i = 0; i < r->getTerminals().size(); i++)
-		{
-			this->terminals.push_back(r->getTerminals()[i]);
-		}
 		this->rules.push_back(r->clone());
 	}
 	else
 	{
-		std::cout << terminalCheck << variableCheck;
 		std::cout << "Incorrect rule.\n";
 		assert(false);
 	}

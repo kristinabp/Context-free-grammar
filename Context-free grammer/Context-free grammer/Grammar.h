@@ -14,12 +14,13 @@ private:
 	std::vector<Rule*> rules;
 	std::string id;
 	std::vector <std::string> variables; // A -> non-terminal
-	std::vector<std::string> terminals; // -> a terminal
+	std::vector<char> terminals; // -> a terminal
 	char startVariable;
 	static int counter;
 
 	bool checkVariable(const std::string ch)const;
 	bool checkTerminal(const char ch)const;
+	bool checkTerminalSet(const char ch)const;
 	bool checkUpper(const char ch) const;
 	void copy(const Grammar& other);
 
@@ -28,7 +29,7 @@ private:
 public:
 	Grammar();
 	Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables,
-		    const std::vector<std::string> terminals, const char startVariable);
+		    const std::vector<char> terminals, const char startVariable);
 	Grammar(const Grammar& other);
 	~Grammar();
 
@@ -36,7 +37,7 @@ public:
 
 	std::string getId()const;
 	std::vector<std::string> getVariables()const;
-	std::vector<std::string> getTerminals()const;
+	std::vector<char> getTerminals()const;
 
 	void addNewVariable(const std::string& var);
 	void setNewVariableName(size_t index, const char var);

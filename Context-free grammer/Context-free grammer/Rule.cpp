@@ -3,15 +3,15 @@
 void Rule::copy(const Rule & other)
 {
 	this->variable = other.variable;
-	this->terminals = other.terminals;
+	this->production = other.production;
 }
 
-Rule::Rule() :terminals(std::vector<std::string>())
+Rule::Rule() :production(std::vector<std::string>())
 {
 }
 
-Rule::Rule(const char variable, const std::vector<std::string> terminals) : variable(variable), 
-                                                                           terminals(terminals)
+Rule::Rule(const char variable, const std::vector<std::string> production) : variable(variable), 
+                                                                           production(production)
 {
 }
 
@@ -29,9 +29,9 @@ char Rule::getVariable() const
 	return this->variable;
 }
 
-std::vector<std::string> Rule::getTerminals() const
+std::vector<std::string> Rule::getProduction() const
 {
-	return this->terminals;
+	return this->production;
 }
 
 Rule * Rule::clone() const
@@ -52,9 +52,9 @@ Rule & Rule::operator=(const Rule & other)
 void Rule::print(std::ostream& os) const
 {
 	os << this->variable << " -> ";
-	for (size_t i = 0; i < terminals.size()-1; i++)
+	for (size_t i = 0; i < production.size()-1; i++)
 	{
-		os << this->terminals[i] << " | ";
+		os << this->production[i] << " | ";
 	}
-	os << this->terminals[terminals.size()-1] ;
+	os << this->production[production.size()-1] ;
 }

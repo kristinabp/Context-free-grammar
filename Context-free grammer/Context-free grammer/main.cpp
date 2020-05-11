@@ -2,8 +2,8 @@
 
 int main()
 {
-	Grammar g1 = { {}, {"A", "B", "C"}, {}, 'A' };
-	Grammar g2 = { {}, {"D", "A", "F"}, {}, 'D' };
+	Grammar g1 = { {}, {"A", "B", "C"}, {'a', 'b', 'c'}, 'A' };
+	Grammar g2 = { {}, {"D", "A", "F"}, {'a', 'b', 'c'}, 'D' };
 	g1.addRule(new Rule('A', { "BC" }));
 	g1.addRule(new Rule('B', { "aBb", "ab" }));
 	g1.addRule(new Rule('C', { "cC", "C" }));
@@ -16,6 +16,6 @@ int main()
 	std::cout << "--------------------------------------------\n";
 
 	GrammarSet gs({ &g1,&g2 });
-	gs.unionn("1-A", "2-D");
+	gs.print("2-D");
 	return system("pause");
 }  

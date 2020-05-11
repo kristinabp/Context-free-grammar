@@ -9,18 +9,18 @@ class Rule
 {
 private:
 	char variable;
-	std::vector<std::string> terminals;
+	std::vector<std::string> production;
 
 	void copy(const Rule& other);
 
 public:
 	Rule();
-	Rule(const char variable, const std::vector<std::string> terminals);
+	Rule(const char variable, const std::vector<std::string> production);
 	Rule(const Rule& other);
 	~Rule();
 
 	char getVariable()const;
-	std::vector<std::string> getTerminals()const;
+	std::vector<std::string> getProduction()const;
 
 	Rule* clone() const;
 
