@@ -1,5 +1,25 @@
 #include "GrammarSet.h"
 
+int GrammarSet::counter = 0;
+
+bool GrammarSet::checkVariablesSet(const Grammar & first, const Grammar & second)
+{
+	bool flag = true;
+	for (size_t i = 0; i < first.getVariables().size(); i++)
+	{
+		if (std::find(second.getVariables().begin(), second.getVariables().end(), first.getVariables()[i]) != second.getVariables().end())
+		{
+			continue;
+		}
+		else {
+			return false;
+			break;
+		}
+	}
+
+	return true;
+}
+
 GrammarSet::GrammarSet(): grammarSet(std::vector<Grammar*>())
 {
 }
@@ -132,7 +152,7 @@ void GrammarSet::addRule(const std::string id, const std::string rule)
 			if (grammarSet[i]->getId() == id)
 			{
 				findGrammar = true;
-				grammarSet[i]->addRule(new Rule(firstPart[0],secondPart));
+				grammarSet[i]->addRule(new Rule(firstPart,secondPart));
 				break;
 			}
 			else
@@ -182,14 +202,11 @@ void GrammarSet::unionn(const std::string & id1, const std::string & id2)
 {
 	if (id1 == id2)
 	{
-		std::cout << "Try to union the same grammars grammar.\n";
+		std::cout << "Try to union the same grammars.\n";
 		assert(false);
 	}
-
 	//first step: arrange it so the two grammars have no variables(non-terminals) in common
 
-	
-	Grammar* newGrammar=nullptr;
 	Grammar* firstGrammar = nullptr;
 	Grammar* secondGrammar=nullptr;
 	for (size_t i = 0; i < grammarSet.size(); i++)
@@ -209,23 +226,46 @@ void GrammarSet::unionn(const std::string & id1, const std::string & id2)
 			break;
 		}
 	}
-	std::vector<std::string> firstVar;
-	for (size_t i = 0; i < firstGrammar->getVariables().size(); i++)
+	this->counter++;
+	std::string newStartingVariable = "S0" + std::to_string(counter);
+	Grammar* newGrammar = new Grammar({}, { newStartingVariable }, firstGrammar->getTerminals(), newStartingVariable);
+
+	//check if terminals sets are equal, if not return error
+	if (firstGrammar->getTerminals() == secondGrammar->getTerminals())
 	{
-		firstVar.push_back(firstGrammar->getVariables()[i]);
-	}
-	
-	for (size_t i = 0; i < secondGrammar->getVariables().size(); i++)
-	{
-		if (std::find(firstVar.begin(), firstVar.end(), secondGrammar->getVariables()[i]) != firstVar.end())
+		if (checkVariablesSet(*firstGrammar, *secondGrammar))
 		{
-			newGrammar->addNewVariable(secondGrammar->getVariables()[i] + "2");
+
 		}
 		else
 		{
-			newGrammar->addNewVariable(secondGrammar->getVariables()[i]);
-		}
-	}
+			for (size_t i = 0; i < firstGrammar->getVariables().size(); i++)
+			{
+				newGrammar->addNewVariable(firstGrammar->getVariables()[i]);
+			}
+			
+			for (size_t i = 0; i < secondGrammar->getVariables().size(); i++)
+			{
+				newGrammar->addNewVariable(secondGrammar->getVariables()[i]);
+			}
 
-	newGrammar->print();
+            newGrammar->addRule(new Rule(newStartingVariable, { firstGrammar->getStartVariable() , secondGrammar->getStartVariable() }));
+			for (size_t i = 0; i < firstGrammar->getRules().size(); i++)
+			{
+				newGrammar->addRule(firstGrammar->getRules()[i]);
+			}
+
+			for (size_t i = 0; i < secondGrammar->getRules().size(); i++)
+			{
+				newGrammar->addRule(secondGrammar->getRules()[i]);
+			}
+			addGrammar(newGrammar);
+		}
+
+	}
+	else
+	{
+		std::cout << "Not equal terminal sets.\n";
+		assert(false);
+	}
 }

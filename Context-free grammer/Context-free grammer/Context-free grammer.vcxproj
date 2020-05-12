@@ -115,15 +115,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AddRuleCommand.h" />
+    <ClInclude Include="ExitCommand.h" />
     <ClInclude Include="Grammar.h" />
     <ClInclude Include="GrammarSet.h" />
+    <ClInclude Include="HelpCommand.h" />
+    <ClInclude Include="ICommand.h" />
+    <ClInclude Include="Invoker.h" />
+    <ClInclude Include="ListCommand.h" />
+    <ClInclude Include="PrintCommand.h" />
+    <ClInclude Include="RemoveRuleCommand.h" />
     <ClInclude Include="Rule.h" />
+    <ClInclude Include="SaveCommand.h" />
+    <ClInclude Include="Validator.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddRuleCommand.cpp" />
+    <ClCompile Include="ExitCommand.cpp" />
     <ClCompile Include="Grammar.cpp" />
     <ClCompile Include="GrammarSet.cpp" />
+    <ClCompile Include="HelpCommand.cpp" />
+    <ClCompile Include="ICommand.cpp" />
+    <ClCompile Include="Invoker.cpp" />
+    <ClCompile Include="ListCommand.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PrintCommand.cpp" />
+    <ClCompile Include="RemoveRuleCommand.cpp" />
     <ClCompile Include="Rule.cpp" />
+    <ClCompile Include="SaveCommand.cpp" />
+    <ClCompile Include="Validator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

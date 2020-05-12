@@ -9,6 +9,9 @@ class GrammarSet
 {
 private:
 	std::vector<Grammar*> grammarSet;
+	static int counter;
+
+	bool checkVariablesSet(const Grammar& first, const Grammar& second);
 
 public:
 	GrammarSet();

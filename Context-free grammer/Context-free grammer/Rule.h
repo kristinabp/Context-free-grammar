@@ -8,18 +8,18 @@
 class Rule
 {
 private:
-	char variable;
+	std::string variable;
 	std::vector<std::string> production;
 
 	void copy(const Rule& other);
 
 public:
 	Rule();
-	Rule(const char variable, const std::vector<std::string> production);
+	Rule(const std::string variable, const std::vector<std::string> production);
 	Rule(const Rule& other);
 	~Rule();
 
-	char getVariable()const;
+	std::string getVariable()const;
 	std::vector<std::string> getProduction()const;
 
 	Rule* clone() const;

@@ -15,7 +15,7 @@ private:
 	std::string id;
 	std::vector <std::string> variables; // A -> non-terminal
 	std::vector<char> terminals; // -> a terminal
-	char startVariable;
+	std::string startVariable;
 	static int counter;
 
 	bool checkVariable(const std::string ch)const;
@@ -29,7 +29,7 @@ private:
 public:
 	Grammar();
 	Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables,
-		    const std::vector<char> terminals, const char startVariable);
+		    const std::vector<char> terminals, const std::string startVariable);
 	Grammar(const Grammar& other);
 	~Grammar();
 
@@ -38,6 +38,8 @@ public:
 	std::string getId()const;
 	std::vector<std::string> getVariables()const;
 	std::vector<char> getTerminals()const;
+	std::vector<Rule*> getRules()const;
+	std::string getStartVariable()const;
 
 	void addNewVariable(const std::string& var);
 	void setNewVariableName(size_t index, const char var);

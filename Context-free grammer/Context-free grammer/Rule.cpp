@@ -10,7 +10,7 @@ Rule::Rule() :production(std::vector<std::string>())
 {
 }
 
-Rule::Rule(const char variable, const std::vector<std::string> production) : variable(variable), 
+Rule::Rule(const std::string variable, const std::vector<std::string> production) : variable(variable), 
                                                                            production(production)
 {
 }
@@ -24,7 +24,7 @@ Rule::~Rule()
 {
 }
 
-char Rule::getVariable() const
+std::string Rule::getVariable() const
 {
 	return this->variable;
 }
