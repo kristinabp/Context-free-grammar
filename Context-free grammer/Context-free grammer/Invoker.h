@@ -1,6 +1,7 @@
 #ifndef INVOKER_H
 #define INVOKER_H
 
+#include "OpenCommand.h"
 #include "HelpCommand.h"
 #include "ICommand.h"
 #include "ExitCommand.h"

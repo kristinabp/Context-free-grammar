@@ -123,6 +123,7 @@
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="Invoker.h" />
     <ClInclude Include="ListCommand.h" />
+    <ClInclude Include="OpenCommand.h" />
     <ClInclude Include="PrintCommand.h" />
     <ClInclude Include="RemoveRuleCommand.h" />
     <ClInclude Include="Rule.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="Invoker.cpp" />
     <ClCompile Include="ListCommand.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="OpenCommand.cpp" />
     <ClCompile Include="PrintCommand.cpp" />
     <ClCompile Include="RemoveRuleCommand.cpp" />
     <ClCompile Include="Rule.cpp" />

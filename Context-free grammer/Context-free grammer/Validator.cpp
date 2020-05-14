@@ -26,6 +26,15 @@ bool Validator::validateCommand(ICommand * cmd, std::string input)
 		}
 		else return false;
 	}
+	else if (words[0] == "open" && words.size() == 2)
+	{
+		//input --> open filename
+		if (words[0] == cmd->toString())
+		{
+			return true;
+		}
+		else return false;
+	}
 	else if (words[0] == "exit")
 	{
 		//input --> exit

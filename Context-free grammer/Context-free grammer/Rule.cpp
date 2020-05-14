@@ -51,10 +51,10 @@ Rule & Rule::operator=(const Rule & other)
 
 void Rule::print(std::ostream& os) const
 {
-	os << this->variable << " -> ";
+	os << this->variable << "->";
 	for (size_t i = 0; i < production.size()-1; i++)
 	{
-		os << this->production[i] << " | ";
+		os << this->production[i] << "|";
 	}
 	os << this->production[production.size()-1] ;
 }

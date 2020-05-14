@@ -2,6 +2,7 @@
 
 Invoker::Invoker() : receiver(new GrammarSet())
 {
+	commands.push_back(new OpenCommand(*receiver));
 	commands.push_back(new HelpCommand(*receiver));
 	commands.push_back(new ExitCommand(*receiver));
 	commands.push_back(new ListCommand(*receiver));

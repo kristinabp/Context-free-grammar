@@ -1,9 +1,9 @@
-﻿  AddRuleCommand.cpp
-  Invoker.cpp
+﻿  Invoker.cpp
   main.cpp
+  OpenCommand.cpp
   Validator.cpp
 c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\validator.cpp(8): warning C4018: '<': signed/unsigned mismatch
 c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\validator.cpp(10): warning C4018: '<': signed/unsigned mismatch
   Generating Code...
-c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\validator.cpp(83): warning C4715: 'Validator::validateCommand': not all control paths return a value
+c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\validator.cpp(92): warning C4715: 'Validator::validateCommand': not all control paths return a value
   Context-free grammer.vcxproj -> C:\Users\Home PC\Desktop\github-repositories\Context-free-grammar\Context-free grammer\Debug\Context-free grammer.exe

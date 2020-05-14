@@ -54,6 +54,9 @@
     <ClInclude Include="AddRuleCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OpenCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rule.cpp">
@@ -96,6 +99,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AddRuleCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

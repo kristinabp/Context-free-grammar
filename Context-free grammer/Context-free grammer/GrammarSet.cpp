@@ -52,6 +52,111 @@ void GrammarSet::help()
 	std::cout << "-----------------------------------------------------------------------------------------------\n";
 }
 
+void GrammarSet::open(std::string fileName)
+{
+	std::fstream inputFile;
+	inputFile.open(fileName, std::ios::in);
+	if (!isOpen)
+	{
+		if (inputFile.is_open())
+		{
+			this->isOpen = true;
+			this->fileName = fileName;
+			std::vector<std::string> variables;
+			std::vector<char> terminals;
+			std::vector<std::string> rules;;
+			std::string startVariable;
+			std::string numRules;
+			std::string temp;
+
+				//variables -> A B C D ...
+				std::getline(inputFile, temp);
+				int k = 0;
+				std::string tempVar;
+				while (k < temp.size())
+				{
+					if (temp[k] != ' ')
+					{
+						tempVar.push_back(temp[k]);
+						k++;
+					}
+					else
+					{
+						variables.push_back(tempVar);
+						tempVar = "";
+						k++;
+					}
+				}
+				variables.push_back(tempVar);
+
+				//terminals -> a b c d ....
+				std::getline(inputFile, temp);
+				k = 0;
+				while (k < temp.size())
+				{
+					if (temp[k] != ' ')
+					{
+						terminals.push_back(temp[k]);
+						k++;
+					}
+					else
+					{
+						k++;
+					}
+				}
+				getline(inputFile, startVariable);
+
+				//creating new grammar to save the current input
+				Grammar gr({}, variables, terminals, startVariable);
+
+				std::string firstPart, curr;
+				std::vector<std::string> secondPart;
+				int j = 0;
+				getline(inputFile, numRules);
+				int num = stoi(numRules);
+
+				//rules : firstPart -> secondPart
+				//firstPart : variables
+				//secondPart :terminals
+
+				while (num > 0)
+				{
+					getline(inputFile, temp);
+					while (temp[j] != '-')
+					{
+						firstPart.push_back(temp[j]);
+						j++;
+					}
+					j += 2;
+					while (j < temp.size())
+					{
+						while (temp[j] != '|' && j < temp.size())
+						{
+							curr.push_back(temp[j]);
+							j++;
+						}
+						secondPart.push_back(curr);
+						curr = "";
+						j++;
+					}
+					j = 0;
+					num--;
+					gr.addRule(new Rule(firstPart, secondPart));
+					firstPart = "";
+					secondPart.clear();
+				}
+
+				addGrammar(&gr);
+			inputFile.close();
+		}
+		
+	}
+	else
+	{
+		std::cout << "You have already opened a file.Close it to open a new file.\n";
+	}
+}
+
 void GrammarSet::exit()
 {
 	std::cout << "> exit\n";

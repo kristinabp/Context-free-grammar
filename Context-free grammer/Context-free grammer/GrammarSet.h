@@ -10,6 +10,8 @@ class GrammarSet
 private:
 	std::vector<Grammar*> grammarSet;
 	static int counter;
+	bool isOpen = false;
+	std::string fileName;
 
 	bool checkVariablesSet(const Grammar& first, const Grammar& second);
 

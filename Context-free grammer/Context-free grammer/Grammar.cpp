@@ -333,20 +333,26 @@ void Grammar::removeRule(int index)
 
 void Grammar::save(std::ostream & os)
 {
-	for (size_t i = 0; i < variables.size(); i++)
+	for (size_t i = 0; i < variables.size()-1; i++)
 	{
-		os << variables[i] << "\t";
+		os << variables[i] << " ";
 	}
-	os << "\n";
-	for (size_t i = 0; i < terminals.size(); i++)
+	os << variables[variables.size() - 1];
+	os << '\n';
+	for (size_t i = 0; i < terminals.size()-1; i++)
 	{
-		os << terminals[i] << "\t";
+		os << terminals[i] << " ";
 	}
-	os << "\n";
+	os << terminals[terminals.size() - 1 ];
+	os << '\n';
+	os << startVariable;
+	os<< '\n';
+	os << rules.size();
+	os << '\n';
 	for (size_t i = 0; i < rules.size(); i++)
 	{
 		rules[i]->print(os);
-		os << "\t";
+		os << '\n';
 	}
 }
 
