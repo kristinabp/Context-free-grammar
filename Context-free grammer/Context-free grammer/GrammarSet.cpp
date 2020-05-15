@@ -36,20 +36,27 @@ void GrammarSet::addGrammar(const Grammar * grammar)
 
 void GrammarSet::help()
 {
-	std::cout << "> help\n";
-	std::cout << "------ The following commands are supported : -------------------------------------------------\n";
-	std::cout << "|open <file>				opens <file>\n";
-	std::cout << "|close					closes currently opened file\n";
-	std::cout << "|save <id> <fileName>			saves a grammar in a file\n";
-	std::cout << "|saveas <file>				saves the currently open file in <file>\n";
-	std::cout << "|help					prints this information\n";
-	std::cout << "|exit					exists the program\n";
-	std::cout << "|addgrammar <grammarName>		adds new grammar\n";
-	std::cout << "|list 					lists all grammar ids\n";
-	std::cout << "|print <id>				prints a grammar\n";
-	std::cout << "|addRule <id> <rule> 			adds a new rule\n";
-	std::cout << "|removeRule <id> <n> 			removes a rule with a number\n";
-	std::cout << "-----------------------------------------------------------------------------------------------\n";
+	if (isOpen)
+	{
+		std::cout << "> help\n";
+		std::cout << "------ The following commands are supported : -------------------------------------------------\n";
+		std::cout << "|open <file>				opens <file>\n";
+		std::cout << "|close					closes currently opened file\n";
+		std::cout << "|save <id> <fileName>			saves a grammar in a file\n";
+		std::cout << "|saveas <file>				saves the currently open file in <file>\n";
+		std::cout << "|help					prints this information\n";
+		std::cout << "|exit					exists the program\n";
+		std::cout << "|addgrammar <grammarName>		adds new grammar\n";
+		std::cout << "|list 					lists all grammar ids\n";
+		std::cout << "|print <id>				prints a grammar\n";
+		std::cout << "|addRule <id> <rule> 			adds a new rule\n";
+		std::cout << "|removeRule <id> <n> 			removes a rule with a number\n";
+		std::cout << "-----------------------------------------------------------------------------------------------\n";
+	}
+	else
+	{
+		std::cout << "Please, open a file.\n";
+	}
 }
 
 void GrammarSet::open(std::string fileName)
@@ -148,12 +155,79 @@ void GrammarSet::open(std::string fileName)
 
 				addGrammar(&gr);
 			inputFile.close();
+			std::cout << "> open " << fileName << "\n";
+			std::cout << "Successfully opened " << fileName << "\n";
+			std::cout << "------------------------------------------\n";
+			std::cout << "----------- Grammar list :--------------\n";
+			for (size_t i = 0; i < grammarSet.size(); i++)
+			{
+				grammarSet[i]->print();
+			}
+			std::cout << "------------------------------------------\n";
 		}
+		else
+		{
+			std::cout << "Couldn't open " << fileName << "\n";
+			std::cout << "Creating new file..\n";
+
+			inputFile.open(fileName, std::ios::in | std::ios::out | std::ios::trunc);
+			this->isOpen = true;
+			this->fileName = fileName;
+			inputFile.close();
+			std::cout << "Please, add grammars.\n";
+        }
+		
 		
 	}
 	else
 	{
 		std::cout << "You have already opened a file.Close it to open a new file.\n";
+	}
+}
+
+void GrammarSet::close()
+{
+	if (isOpen)
+	{
+		std::cout << "> close\n";
+		std::cout << "Successfully closed " << fileName << ".\n";
+
+		this->isOpen = false;
+		this->fileName = "";
+		this->grammarSet.clear();
+	}
+	else
+	{
+		std::cout << "Please, open a file.\n";
+	}
+}
+
+void GrammarSet::saveAs(std::string fileName)
+{
+
+	if (isOpen)
+	{
+		std::ofstream myfile;
+		myfile.open(fileName);
+		if (myfile.good())
+		{
+			for (size_t i = 0; i < grammarSet.size(); i++)
+			{
+				grammarSet[i]->save(myfile);
+
+			}
+			myfile.close();
+			std::cout << "> save as " << fileName << "\n";
+			std::cout << "Successfully saved as " << fileName << "\n";
+		}
+		else
+		{
+			std::cout << "Couldn't open " << fileName << "\n";
+		}
+	}
+	else
+	{
+		std::cout << "Please, open a file.\n";
 	}
 }
 
@@ -165,212 +239,259 @@ void GrammarSet::exit()
 
 void GrammarSet::list()
 {
-	for (size_t i = 0; i < grammarSet.size(); i++)
+	if (isOpen)
 	{
-		std::cout << grammarSet[i]->getId();
+		for (size_t i = 0; i < grammarSet.size(); i++)
+		{
+			std::cout << grammarSet[i]->getId() << "\n";
+		}
+	}
+	else
+	{
+		std::cout << "Please, open a file.\n";
 	}
 }
 
 void GrammarSet::print(std::string id)
 {
-	for (size_t i = 0; i < grammarSet.size(); i++)
+	if (isOpen)
 	{
-		if (id == grammarSet[i]->getId())
+		for (size_t i = 0; i < grammarSet.size(); i++)
 		{
-			grammarSet[i]->print();
+			if (id == grammarSet[i]->getId())
+			{
+				grammarSet[i]->print();
+			}
 		}
+	}
+	else
+	{
+		std::cout << "Please, open a file.\n";
 	}
 }
 
 void GrammarSet::save(std::string id, std::string fileName)
 {
-	std::ofstream myfile;
-	myfile.open(fileName);
-	if (myfile.good())
+	if (isOpen)
 	{
-		for (size_t i = 0; i < grammarSet.size(); i++)
+		std::ofstream myfile;
+		myfile.open(fileName);
+		if (myfile.good())
 		{
-			if (grammarSet[i]->getId() == id)
+			for (size_t i = 0; i < grammarSet.size(); i++)
 			{
-				grammarSet[i]->save(myfile);
-				myfile.close();
-				std::cout << "Successfully saved as " << fileName << "\n";
-				return;
+				if (grammarSet[i]->getId() == id)
+				{
+					grammarSet[i]->save(myfile);
+					myfile.close();
+					std::cout << "Successfully saved as " << fileName << "\n";
+					return;
+				}
+				else
+				{
+					std::cout << "Grammar with this id does not exist.\n";
+				}
 			}
-			else
-			{
-				std::cout << "Grammar with this id does not exist.\n";
-			}
+			myfile.close();
+			std::cout << "Could not saved as " << fileName << "\n";
+
 		}
-		myfile.close();
-		std::cout << "Could not saved as " << fileName << "\n";
-		
+		else
+		{
+			std::cout << "Couldn't open " << fileName << "\n";
+		}
 	}
 	else
 	{
-		std::cout << "Couldn't open " << fileName << "\n";
+		std::cout << "Please, open a file.\n";
 	}
 }
 
 void GrammarSet::addRule(const std::string id, const std::string rule)
 {
-	if (rule == "")
+	if (isOpen)
 	{
-		std::cout << "Incorrect input.\n";
-	}
-
-	if (!rule.find("->"))
-	{
-		std::cout << "Incorrect input.\n";
-	}
-
-	std::string firstPart, curr;
-	std::vector<std::string> secondPart;
-	int i = 0;
-	while (rule[i] != '-')
-	{
-		firstPart.push_back(rule[i]);
-		i++;
-	}
-	i += 2;
-	while (i < rule.size())
-	{
-		while (rule[i] != '|' && i < rule.size())
+		if (rule == "")
 		{
-			curr.push_back(rule[i]);
+			std::cout << "Incorrect input.\n";
+		}
+
+		if (!rule.find("->"))
+		{
+			std::cout << "Incorrect input.\n";
+		}
+
+		std::string firstPart, curr;
+		std::vector<std::string> secondPart;
+		int i = 0;
+		while (rule[i] != '-')
+		{
+			firstPart.push_back(rule[i]);
 			i++;
 		}
-		secondPart.push_back(curr);
-		curr = "";
-		i++;
-	}
-
-	bool findGrammar = true;
-	if (firstPart.size() >= 2)
-	{
-		std::cout << "Incorrect input.\n";
-	}
-	else
-	{
-		for (size_t i = 0; i < grammarSet.size(); i++)
+		i += 2;
+		while (i < rule.size())
 		{
-			if (grammarSet[i]->getId() == id)
+			while (rule[i] != '|' && i < rule.size())
 			{
-				findGrammar = true;
-				grammarSet[i]->addRule(new Rule(firstPart,secondPart));
-				break;
+				curr.push_back(rule[i]);
+				i++;
 			}
-			else
-			{
-				findGrammar = false;
-			}
+			secondPart.push_back(curr);
+			curr = "";
+			i++;
 		}
-		if (findGrammar)
+
+		bool findGrammar = true;
+		if (firstPart.size() >= 2)
 		{
-			std::cout << "Sucessfully added rule " << firstPart << " -> ";
-			for (size_t i = 0; i < secondPart.size(); i++)
-			{
-				std::cout << secondPart[i] << " | ";
-			}
-			std::cout << std:: endl;
+			std::cout << "Incorrect input.\n";
 		}
 		else
 		{
-			std::cout << "Couldn't find grammar with this id.\n";
+			for (size_t i = 0; i < grammarSet.size(); i++)
+			{
+				if (grammarSet[i]->getId() == id)
+				{
+					findGrammar = true;
+					grammarSet[i]->addRule(new Rule(firstPart, secondPart));
+					break;
+				}
+				else
+				{
+					findGrammar = false;
+				}
+			}
+			if (findGrammar)
+			{
+				std::cout << "Sucessfully added rule " << firstPart << " -> ";
+				for (size_t i = 0; i < secondPart.size(); i++)
+				{
+					std::cout << secondPart[i] << " | ";
+				}
+				std::cout << std::endl;
+			}
+			else
+			{
+				std::cout << "Couldn't find grammar with this id.\n";
+			}
 		}
+	}
+	else
+	{
+		std::cout << "Please, open a file.\n";
 	}
 }
 
 void GrammarSet::removeRule(std::string id, int index)
 {
-	bool flag = true;
-	for (size_t i = 0; i < grammarSet.size(); i++)
+	if (isOpen)
 	{
-		if (grammarSet[i]->getId() == id)
+		bool flag = true;
+		for (size_t i = 0; i < grammarSet.size(); i++)
 		{
-			grammarSet[i]->removeRule(index);
-			flag = true;
-			break;
+			if (grammarSet[i]->getId() == id)
+			{
+				grammarSet[i]->removeRule(index);
+				flag = true;
+				break;
+			}
+			else
+			{
+				flag = false;
+			}
 		}
-		else
+		if (!flag)
 		{
-			flag = false;
+			std::cout << "Incorrect Id.\n";
 		}
 	}
-	if (!flag)
+	else
 	{
-		std::cout << "Incorrect Id.\n";
+		std::cout << "Please, open a file.\n";
 	}
 }
 
 void GrammarSet::unionn(const std::string & id1, const std::string & id2)
 {
-	if (id1 == id2)
+	if (isOpen)
 	{
-		std::cout << "Try to union the same grammars.\n";
-		assert(false);
-	}
-	//first step: arrange it so the two grammars have no variables(non-terminals) in common
-
-	Grammar* firstGrammar = nullptr;
-	Grammar* secondGrammar=nullptr;
-	for (size_t i = 0; i < grammarSet.size(); i++)
-	{
-		if (grammarSet[i]->getId() == id1)
+		if (id1 == id2)
 		{
-			firstGrammar = grammarSet[i];
-			break;
+			std::cout << "Try to union the same grammars.\n";
+			assert(false);
 		}
-	}
+		//first step: arrange it so the two grammars have no variables(non-terminals) in common
 
-	for (size_t i = 0; i < grammarSet.size(); i++)
-	{
-		if (grammarSet[i]->getId() == id2)
+		Grammar* firstGrammar = nullptr;
+		Grammar* secondGrammar = nullptr;
+		for (size_t i = 0; i < grammarSet.size(); i++)
 		{
-			secondGrammar = grammarSet[i];
-			break;
+			if (grammarSet[i]->getId() == id1)
+			{
+				firstGrammar = grammarSet[i];
+				break;
+			}
 		}
-	}
-	this->counter++;
-	std::string newStartingVariable = "S0" + std::to_string(counter);
-	Grammar* newGrammar = new Grammar({}, { newStartingVariable }, firstGrammar->getTerminals(), newStartingVariable);
 
-	//check if terminals sets are equal, if not return error
-	if (firstGrammar->getTerminals() == secondGrammar->getTerminals())
-	{
-		if (checkVariablesSet(*firstGrammar, *secondGrammar))
+		for (size_t i = 0; i < grammarSet.size(); i++)
 		{
+			if (grammarSet[i]->getId() == id2)
+			{
+				secondGrammar = grammarSet[i];
+				break;
+			}
+		}
+		this->counter++;
+		std::string newStartingVariable = "S0" + std::to_string(counter);
+		Grammar* newGrammar = new Grammar({}, { newStartingVariable }, firstGrammar->getTerminals(), newStartingVariable);
+
+		//check if terminals sets are equal, if not return error
+		if (firstGrammar->getTerminals() == secondGrammar->getTerminals())
+		{
+			if (checkVariablesSet(*firstGrammar, *secondGrammar))
+			{
+
+			}
+			else
+			{
+				for (size_t i = 0; i < firstGrammar->getVariables().size(); i++)
+				{
+					newGrammar->addNewVariable(firstGrammar->getVariables()[i]);
+				}
+
+				for (size_t i = 0; i < secondGrammar->getVariables().size(); i++)
+				{
+					newGrammar->addNewVariable(secondGrammar->getVariables()[i]);
+				}
+
+				newGrammar->addRule(new Rule(newStartingVariable, { firstGrammar->getStartVariable() , secondGrammar->getStartVariable() }));
+				for (size_t i = 0; i < firstGrammar->getRules().size(); i++)
+				{
+					newGrammar->addRule(firstGrammar->getRules()[i]);
+				}
+
+				for (size_t i = 0; i < secondGrammar->getRules().size(); i++)
+				{
+					newGrammar->addRule(secondGrammar->getRules()[i]);
+				}
+				addGrammar(newGrammar);
+			}
 
 		}
 		else
 		{
-			for (size_t i = 0; i < firstGrammar->getVariables().size(); i++)
-			{
-				newGrammar->addNewVariable(firstGrammar->getVariables()[i]);
-			}
-			
-			for (size_t i = 0; i < secondGrammar->getVariables().size(); i++)
-			{
-				newGrammar->addNewVariable(secondGrammar->getVariables()[i]);
-			}
-
-            newGrammar->addRule(new Rule(newStartingVariable, { firstGrammar->getStartVariable() , secondGrammar->getStartVariable() }));
-			for (size_t i = 0; i < firstGrammar->getRules().size(); i++)
-			{
-				newGrammar->addRule(firstGrammar->getRules()[i]);
-			}
-
-			for (size_t i = 0; i < secondGrammar->getRules().size(); i++)
-			{
-				newGrammar->addRule(secondGrammar->getRules()[i]);
-			}
-			addGrammar(newGrammar);
+			std::cout << "Not equal terminal sets.\n";
+			assert(false);
 		}
-
 	}
 	else
 	{
-		std::cout << "Not equal terminal sets.\n";
-		assert(false);
+		std::cout << "Please, open a file.\n";
 	}
+}
+
+void GrammarSet::chomsky(std::string id)
+{
+	
 }

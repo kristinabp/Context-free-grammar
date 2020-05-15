@@ -10,6 +10,8 @@
 #include "SaveCommand.h"
 #include "RemoveRuleCommand.h"
 #include "AddRuleCommand.h"
+#include "SaveAsCommand.h"
+#include "CloseCommand.h"
 #include "Validator.h"
 
 class Invoker

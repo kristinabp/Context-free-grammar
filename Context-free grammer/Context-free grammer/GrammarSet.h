@@ -33,6 +33,7 @@ public:
 	void addRule(const std::string id, const std::string rule);
 	void removeRule(const std::string id, int index);
 	void unionn(const std::string& id1, const std::string& id2);
+	void chomsky(std::string id);
 
 };
 #endif // !GRAMMARSET_H

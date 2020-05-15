@@ -356,6 +356,43 @@ void Grammar::save(std::ostream & os)
 	}
 }
 
+void Grammar::chomsky()
+{
+	bool chomskyCheck = true;
+	for (size_t i = 0; i < rules.size(); i++)
+	{
+		//check if the vector of production contains only one production and if this production contains only one terminal 
+		if (rules[i]->getProduction().size() == 1 && rules[i]->getProduction()[0].size()==1)
+		{
+			if (checkTerminalSet(rules[i]->getProduction()[0][0]))
+			{
+				chomskyCheck = true;
+			}
+		} //check if the vector of production contains only one production and if this production contains only 2 variables 
+		else if (rules[i]->getProduction().size() == 1 && rules[i]->getProduction()[0].size() == 2)
+		{
+			if (checkVariablesSet(rules[i]->getProduction()[0][0]))
+			{
+				chomskyCheck = true;
+			}
+		}
+		else
+		{
+			chomskyCheck = false;
+			break;
+		}
+	}
+
+	if (chomskyCheck)
+	{
+		std::cout << "The grammar is in normal Chomsky form.\n";
+	}
+	else
+	{
+		std::cout << "The grammar isnot in normal Chomsky form.\n";
+	}
+}
+
 void Grammar::print() const
 {
 	if (variables.size() > 1)

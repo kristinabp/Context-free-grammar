@@ -10,6 +10,8 @@ Invoker::Invoker() : receiver(new GrammarSet())
 	commands.push_back(new SaveCommand(*receiver));
 	commands.push_back(new RemoveRuleCommand(*receiver));
 	commands.push_back(new AddRuleCommand(*receiver));
+	commands.push_back(new SaveAsCommand(*receiver));
+	commands.push_back(new CloseCommand(*receiver));
 }
 
 Invoker::Invoker(ICommand * command) : receiver(new GrammarSet())

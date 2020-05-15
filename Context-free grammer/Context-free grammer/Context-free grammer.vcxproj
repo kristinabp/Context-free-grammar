@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AddRuleCommand.h" />
+    <ClInclude Include="CloseCommand.h" />
     <ClInclude Include="ExitCommand.h" />
     <ClInclude Include="Grammar.h" />
     <ClInclude Include="GrammarSet.h" />
@@ -127,11 +128,13 @@
     <ClInclude Include="PrintCommand.h" />
     <ClInclude Include="RemoveRuleCommand.h" />
     <ClInclude Include="Rule.h" />
+    <ClInclude Include="SaveAsCommand.h" />
     <ClInclude Include="SaveCommand.h" />
     <ClInclude Include="Validator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddRuleCommand.cpp" />
+    <ClCompile Include="CloseCommand.cpp" />
     <ClCompile Include="ExitCommand.cpp" />
     <ClCompile Include="Grammar.cpp" />
     <ClCompile Include="GrammarSet.cpp" />
@@ -144,6 +147,7 @@
     <ClCompile Include="PrintCommand.cpp" />
     <ClCompile Include="RemoveRuleCommand.cpp" />
     <ClCompile Include="Rule.cpp" />
+    <ClCompile Include="SaveAsCommand.cpp" />
     <ClCompile Include="SaveCommand.cpp" />
     <ClCompile Include="Validator.cpp" />
   </ItemGroup>

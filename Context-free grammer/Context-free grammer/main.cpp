@@ -3,9 +3,14 @@
 
 int main()
 {
-    GrammarSet g;
-	g.open("grammar1.txt");
-	g.print("1-A");
+	std::cout;
+	Invoker remote;
+	std::string input;
+	while (true)
+	{
+		getline(std::cin, input);
+		remote.executeCommand(input);
+	}
 
 	return system("pause");
 }  

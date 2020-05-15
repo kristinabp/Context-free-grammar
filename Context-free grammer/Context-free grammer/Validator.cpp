@@ -17,18 +17,18 @@ bool Validator::validateCommand(ICommand * cmd, std::string input)
 		i++;
 	}
 
-	if (words[0] == "help")
+	if (words[0] == "open")
 	{
-		//input --> help
-		if (words[0] == cmd->toString())
+		//input --> open filename
+		if (words[0] == cmd->toString() && words.size() == 2)
 		{
 			return true;
 		}
 		else return false;
 	}
-	else if (words[0] == "open" && words.size() == 2)
+	else if (words[0] == "help")
 	{
-		//input --> open filename
+		//input --> help
 		if (words[0] == cmd->toString())
 		{
 			return true;
@@ -84,6 +84,24 @@ bool Validator::validateCommand(ICommand * cmd, std::string input)
 	{
 		//input --> addrule id rule
 		if (words[0] == cmd->toString() && words.size() == 3)
+		{
+			return true;
+		}
+		else return false;
+	}
+	else if (words[0] == "saveas")
+	{
+		//input --> saveas filename
+		if (words[0] == cmd->toString() && words.size() == 2)
+		{
+			return true;
+		}
+		else return false;
+	}
+	else if (words[0] == "close")
+	{
+		//input --> close
+		if (words[0] == cmd->toString())
 		{
 			return true;
 		}
