@@ -107,4 +107,13 @@ bool Validator::validateCommand(ICommand * cmd, std::string input)
 		}
 		else return false;
 	}
+	else if (words[0] == "chomsky")
+	{
+		//input --> chomsky id
+		if (words[0] == cmd->toString() && words.size() == 2)
+		{
+			return true;
+		}
+		else return false;
+	}
 }

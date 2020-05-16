@@ -21,6 +21,7 @@ private:
 	bool checkVariable(const std::string ch)const;
 	bool checkTerminal(const char ch)const;
 	bool checkTerminalSet(const char ch)const;
+	bool checkVariableSet(const std::string var)const;
 	bool checkUpper(const char ch) const;
 	void copy(const Grammar& other);
 

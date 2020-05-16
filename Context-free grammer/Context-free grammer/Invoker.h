@@ -12,6 +12,7 @@
 #include "AddRuleCommand.h"
 #include "SaveAsCommand.h"
 #include "CloseCommand.h"
+#include "ChomskyCommand.h"
 #include "Validator.h"
 
 class Invoker

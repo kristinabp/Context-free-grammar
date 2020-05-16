@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AddRuleCommand.h" />
+    <ClInclude Include="ChomskyCommand.h" />
     <ClInclude Include="CloseCommand.h" />
     <ClInclude Include="ExitCommand.h" />
     <ClInclude Include="Grammar.h" />
@@ -134,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddRuleCommand.cpp" />
+    <ClCompile Include="ChomskyCommand.cpp" />
     <ClCompile Include="CloseCommand.cpp" />
     <ClCompile Include="ExitCommand.cpp" />
     <ClCompile Include="Grammar.cpp" />
