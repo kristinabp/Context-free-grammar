@@ -1,4 +1,4 @@
-#include "Grammar.h"
+﻿#include "Grammar.h"
 
 int Grammar::counter = 0;
 
@@ -175,7 +175,7 @@ Grammar & Grammar::operator=(const Grammar & other)
 		copy(other);
 	}
 
-	return *this;
+return *this;
 }
 
 std::string Grammar::getId() const
@@ -201,6 +201,11 @@ std::vector<Rule*> Grammar::getRules() const
 std::string Grammar::getStartVariable() const
 {
 	return this->startVariable;
+}
+
+void Grammar::setStartingVariable(std::string var)
+{
+	startVariable = var;
 }
 
 void Grammar::addNewVariable(const std::string & var)
@@ -249,6 +254,10 @@ void Grammar::addRule(const Rule * r)
 			}
 		}
 	}
+	else if (r->getVariable() == "$")
+	{
+		variableCheck = true;
+	}
 	else
 	{
 		std::cout << "Incorrect variable.\n";
@@ -285,6 +294,10 @@ void Grammar::addRule(const Rule * r)
 					{
 						break;
 					}
+				}
+				else if (r->getProduction()[i][j] == '$')
+				{
+					continue;
 				}
 				else
 				{
@@ -393,6 +406,14 @@ void Grammar::chomsky()
 	{
 		std::cout << "The grammar is not in normal Chomsky form.\n";
 	}
+}
+
+void Grammar::iter()
+{
+	addNewVariable("$");
+	std::string oldStartVariable = getStartVariable();
+	setStartingVariable("$");
+	addRule(new Rule("$", { "$" + oldStartVariable }));
 }
 
 void Grammar::print() const

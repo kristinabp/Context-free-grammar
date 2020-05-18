@@ -13,6 +13,7 @@ Invoker::Invoker() : receiver(new GrammarSet())
 	commands.push_back(new SaveAsCommand(*receiver));
 	commands.push_back(new CloseCommand(*receiver));
 	commands.push_back(new ChomskyCommand(*receiver));
+	commands.push_back(new IterCommand(*receiver));
 }
 
 Invoker::Invoker(ICommand * command) : receiver(new GrammarSet())

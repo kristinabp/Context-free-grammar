@@ -66,6 +66,9 @@
     <ClInclude Include="ChomskyCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IterCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Rule.cpp">
@@ -120,6 +123,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChomskyCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IterCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

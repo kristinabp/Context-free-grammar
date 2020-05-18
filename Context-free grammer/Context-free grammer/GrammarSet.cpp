@@ -52,6 +52,7 @@ void GrammarSet::help()
 		std::cout << "|addRule <id> <rule> 			adds a new rule\n";
 		std::cout << "|removeRule <id> <n> 			removes a rule with a number\n";
 		std::cout << "|chomsky <id> 			checks whether a grammar is in normal chomsky form\n";
+		std::cout << "|iter <id> 			checks whether a grammar is in normal chomsky form\n";
 		std::cout << "-----------------------------------------------------------------------------------------------\n";
 	}
 	else
@@ -499,6 +500,18 @@ void GrammarSet::chomsky(std::string id)
 		if (grammarSet[i]->getId() == id)
 		{
 			grammarSet[i]->chomsky();
+		}
+	}
+}
+
+void GrammarSet::iter(const std::string id)
+{
+	for (size_t i = 0; i < grammarSet.size(); i++)
+	{
+		if (grammarSet[i]->getId() == id)
+		{
+			grammarSet[i]->iter();
+			grammarSet[i]->print();
 		}
 	}
 }

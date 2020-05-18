@@ -13,6 +13,7 @@
 #include "SaveAsCommand.h"
 #include "CloseCommand.h"
 #include "ChomskyCommand.h"
+#include "IterCommand.h"
 #include "Validator.h"
 
 class Invoker

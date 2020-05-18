@@ -116,4 +116,13 @@ bool Validator::validateCommand(ICommand * cmd, std::string input)
 		}
 		else return false;
 	}
+	else if (words[0] == "iter")
+	{
+		//input --> iter id
+		if (words[0] == cmd->toString() && words.size() == 2)
+		{
+			return true;
+		}
+		else return false;
+	}
 }

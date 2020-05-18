@@ -42,6 +42,8 @@ public:
 	std::vector<Rule*> getRules()const;
 	std::string getStartVariable()const;
 
+	void setStartingVariable(std::string var);
+
 	void addNewVariable(const std::string& var);
 	void setNewVariableName(size_t index, const char var);
 
@@ -51,6 +53,7 @@ public:
 	void removeRule(int index);
 	void save(std::ostream& os);
 	void chomsky();
+	void iter();
 
 	void print()const;
 
