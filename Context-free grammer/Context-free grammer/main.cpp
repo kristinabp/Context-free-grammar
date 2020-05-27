@@ -12,5 +12,6 @@ int main()
 		remote.executeCommand(input);
 	}
 
+	
 	return system("pause");
 }  

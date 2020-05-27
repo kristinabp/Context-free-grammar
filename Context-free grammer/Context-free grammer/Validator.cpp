@@ -29,7 +29,7 @@ bool Validator::validateCommand(ICommand * cmd, std::string input)
 	else if (words[0] == "help")
 	{
 		//input --> help
-		if (words[0] == cmd->toString())
+		if (words[0] == cmd->toString() && words.size() == 1)
 		{
 			return true;
 		}
@@ -38,7 +38,7 @@ bool Validator::validateCommand(ICommand * cmd, std::string input)
 	else if (words[0] == "exit")
 	{
 		//input --> exit
-		if (words[0] == cmd->toString())
+		if (words[0] == cmd->toString() && words.size() == 1)
 		{
 			return true;
 		}
@@ -47,7 +47,7 @@ bool Validator::validateCommand(ICommand * cmd, std::string input)
 	else if (words[0] == "list")
 	{
 		//input --> list
-		if (words[0] == cmd->toString())
+		if (words[0] == cmd->toString() && words.size() == 1)
 		{
 			return true;
 		}
@@ -101,7 +101,7 @@ bool Validator::validateCommand(ICommand * cmd, std::string input)
 	else if (words[0] == "close")
 	{
 		//input --> close
-		if (words[0] == cmd->toString())
+		if (words[0] == cmd->toString() && words.size() == 1)
 		{
 			return true;
 		}

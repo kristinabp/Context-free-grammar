@@ -63,7 +63,7 @@ void GrammarSet::help()
 
 void GrammarSet::open(std::string fileName)
 {
-	std::fstream inputFile;
+	std::ifstream inputFile;
 	inputFile.open(fileName, std::ios::in);
 	if (!isOpen)
 	{
@@ -73,33 +73,31 @@ void GrammarSet::open(std::string fileName)
 			this->fileName = fileName;
 			std::vector<std::string> variables;
 			std::vector<char> terminals;
-			std::vector<std::string> rules;;
+			std::vector<std::string> rules;
 			std::string startVariable;
 			std::string numRules;
 			std::string temp;
 
+			/*while (!inputFile.eof())
+			{*/
 				//variables -> A B C D ...
-				std::getline(inputFile, temp);
+				std::getline(inputFile, temp); // first line - only variables
 				int k = 0;
-				std::string tempVar;
 				while (k < temp.size())
 				{
 					if (temp[k] != ' ')
 					{
-						tempVar.push_back(temp[k]);
+						variables.push_back(std::string(&temp[k], 1));
 						k++;
 					}
 					else
 					{
-						variables.push_back(tempVar);
-						tempVar = "";
 						k++;
 					}
 				}
-				variables.push_back(tempVar);
 
 				//terminals -> a b c d ....
-				std::getline(inputFile, temp);
+				std::getline(inputFile, temp); // second line - only terminals
 				k = 0;
 				while (k < temp.size())
 				{
@@ -113,35 +111,35 @@ void GrammarSet::open(std::string fileName)
 						k++;
 					}
 				}
-				getline(inputFile, startVariable);
 
-				//creating new grammar to save the current input
+				getline(inputFile, startVariable); // third line - starting variable
+				//creating new grammar to save the current input, because by the current input we will validate the rules
 				Grammar gr({}, variables, terminals, startVariable);
 
 				std::string firstPart, curr;
 				std::vector<std::string> secondPart;
 				int j = 0;
 				getline(inputFile, numRules);
-				int num = stoi(numRules);
+				int num = stoi(numRules); // number of rules
 
 				//rules : firstPart -> secondPart
 				//firstPart : variables
-				//secondPart :terminals
+				//secondPart : production
 
 				while (num > 0)
 				{
-					getline(inputFile, temp);
+					getline(inputFile, temp); // next lines are only rules
 					while (temp[j] != '-')
 					{
 						firstPart.push_back(temp[j]);
 						j++;
 					}
-					j += 2;
+					j += 2; // we skip "->"
 					while (j < temp.size())
 					{
-						while (temp[j] != '|' && j < temp.size())
+						while (temp[j] != '|' && j < temp.size()) // if we read '|' it means that there is more than one production
 						{
-							curr.push_back(temp[j]);
+							curr.push_back(temp[j]);// that is why we need a variable curr to save the different productions
 							j++;
 						}
 						secondPart.push_back(curr);
@@ -150,17 +148,26 @@ void GrammarSet::open(std::string fileName)
 					}
 					j = 0;
 					num--;
-					gr.addRule(new Rule(firstPart, secondPart));
+					gr.addRule(new Rule(firstPart, secondPart)); // if the rule is incorrect addRule will return error
 					firstPart = "";
 					secondPart.clear();
 				}
 
 				addGrammar(&gr);
+
+				/*variables.clear();
+				terminals.clear();
+				rules.clear();
+				startVariable.clear();
+				numRules="";
+			}*/
+
 			inputFile.close();
+
 			std::cout << "> open " << fileName << "\n";
 			std::cout << "Successfully opened " << fileName << "\n";
 			std::cout << "------------------------------------------\n";
-			std::cout << "----------- Grammar list :--------------\n";
+			std::cout << "----------- Grammars:--------------\n";
 			for (size_t i = 0; i < grammarSet.size(); i++)
 			{
 				grammarSet[i]->print();
@@ -206,19 +213,17 @@ void GrammarSet::close()
 
 void GrammarSet::saveAs(std::string fileName)
 {
-
 	if (isOpen)
 	{
-		std::ofstream myfile;
-		myfile.open(fileName);
-		if (myfile.good())
+		std::ofstream myFile;
+		myFile.open(fileName);
+		if (myFile.good())
 		{
 			for (size_t i = 0; i < grammarSet.size(); i++)
 			{
-				grammarSet[i]->save(myfile);
-
+				grammarSet[i]->save(myFile);
 			}
-			myfile.close();
+			myFile.close();
 			std::cout << "> save as " << fileName << "\n";
 			std::cout << "Successfully saved as " << fileName << "\n";
 		}
@@ -289,14 +294,9 @@ void GrammarSet::save(std::string id, std::string fileName)
 					std::cout << "Successfully saved as " << fileName << "\n";
 					return;
 				}
-				else
-				{
-					std::cout << "Grammar with this id does not exist.\n";
-				}
 			}
+			std::cout << "Grammar with this id does not exist.\n";
 			myfile.close();
-			std::cout << "Could not saved as " << fileName << "\n";
-
 		}
 		else
 		{
@@ -313,28 +313,35 @@ void GrammarSet::addRule(const std::string id, const std::string rule)
 {
 	if (isOpen)
 	{
-		if (rule == "")
+		if (rule == "") // if the input is empty
 		{
 			std::cout << "Incorrect input.\n";
+			assert(false);
 		}
 
-		if (!rule.find("->"))
+		if (!rule.find("->")) // check if there is "->"
 		{
 			std::cout << "Incorrect input.\n";
+			assert(false);
 		}
+
+		//rules : firstPart -> secondPart
+		//firstPart : variables
+		//secondPart : production
 
 		std::string firstPart, curr;
 		std::vector<std::string> secondPart;
+
 		int i = 0;
 		while (rule[i] != '-')
 		{
 			firstPart.push_back(rule[i]);
 			i++;
 		}
-		i += 2;
+		i += 2; //skip "->"
 		while (i < rule.size())
 		{
-			while (rule[i] != '|' && i < rule.size())
+			while (rule[i] != '|' && i < rule.size()) // if we read '|' it means that trere is more than one production
 			{
 				curr.push_back(rule[i]);
 				i++;
@@ -345,9 +352,10 @@ void GrammarSet::addRule(const std::string id, const std::string rule)
 		}
 
 		bool findGrammar = true;
-		if (firstPart.size() >= 2)
+		if (firstPart.size() > 1) //if the firstPart is "AA ->" returns error
 		{
 			std::cout << "Incorrect input.\n";
+			assert(false);
 		}
 		else
 		{
@@ -356,8 +364,8 @@ void GrammarSet::addRule(const std::string id, const std::string rule)
 				if (grammarSet[i]->getId() == id)
 				{
 					findGrammar = true;
-					grammarSet[i]->addRule(new Rule(firstPart, secondPart));
-					break;
+					grammarSet[i]->addRule(new Rule(firstPart, secondPart)); // function addRule checks if the rule is correct
+					break;                                                // if the rule is incorrect it will return error
 				}
 				else
 				{
@@ -366,12 +374,12 @@ void GrammarSet::addRule(const std::string id, const std::string rule)
 			}
 			if (findGrammar)
 			{
-				std::cout << "Sucessfully added rule " << firstPart << " -> ";
-				for (size_t i = 0; i < secondPart.size(); i++)
+				std::cout << "Sucessfully added rule " << firstPart << "->";
+				for (size_t i = 0; i < secondPart.size()-1; i++)
 				{
-					std::cout << secondPart[i] << " | ";
+					std::cout << secondPart[i] << "|";
 				}
-				std::cout << std::endl;
+				std::cout << secondPart[secondPart.size() - 1] << "\n";
 			}
 			else
 			{
@@ -512,6 +520,8 @@ void GrammarSet::iter(const std::string id)
 		{
 			grammarSet[i]->iter();
 			grammarSet[i]->print();
+			return;
 		}
 	}
+	std::cout << "Couldn't find grammar with this ID.\n";
 }

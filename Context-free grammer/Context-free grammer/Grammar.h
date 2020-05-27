@@ -11,17 +11,16 @@
 class Grammar
 {
 private: 
-	std::vector<Rule*> rules;
+	std::vector<Rule*> rules; // A -> ab
 	std::string id;
-	std::vector <std::string> variables; // A -> non-terminal
-	std::vector<char> terminals; // -> a terminal
-	std::string startVariable;
+	std::vector <std::string> variables; // A ->
+	std::vector<char> terminals; // alphabet
+	std::string startVariable; 
 	static int counter;
 
 	bool checkVariable(const std::string ch)const;
 	bool checkTerminal(const char ch)const;
 	bool checkTerminalSet(const char ch)const;
-	bool checkVariableSet(const std::string var)const;
 	bool checkUpper(const char ch) const;
 	void copy(const Grammar& other);
 
@@ -43,20 +42,17 @@ public:
 	std::string getStartVariable()const;
 
 	void setStartingVariable(std::string var);
-
 	void addNewVariable(const std::string& var);
-	void setNewVariableName(size_t index, const char var);
 
 	Grammar* clone() const;
 
 	void addRule(const Rule* r);
 	void removeRule(int index);
-	void save(std::ostream& os);
+	void save(std::ostream& os)const;
 	void chomsky();
 	void iter();
 
 	void print()const;
-
 };
 #endif // !GRAMMER_H
 

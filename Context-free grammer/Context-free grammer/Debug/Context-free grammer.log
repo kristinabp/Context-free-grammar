@@ -1,8 +1,3 @@
-﻿  GrammarSet.cpp
-c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\grammarset.cpp(85): warning C4018: '<': signed/unsigned mismatch
-c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\grammarset.cpp(104): warning C4018: '<': signed/unsigned mismatch
-c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\grammarset.cpp(140): warning C4018: '<': signed/unsigned mismatch
-c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\grammarset.cpp(142): warning C4018: '<': signed/unsigned mismatch
-c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\grammarset.cpp(335): warning C4018: '<': signed/unsigned mismatch
-c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\grammarset.cpp(337): warning C4018: '<': signed/unsigned mismatch
+﻿  Grammar.cpp
+c:\users\home pc\desktop\github-repositories\context-free-grammar\context-free grammer\context-free grammer\grammar.cpp(336): warning C4018: '<=': signed/unsigned mismatch
   Context-free grammer.vcxproj -> C:\Users\Home PC\Desktop\github-repositories\Context-free-grammar\Context-free grammer\Debug\Context-free grammer.exe

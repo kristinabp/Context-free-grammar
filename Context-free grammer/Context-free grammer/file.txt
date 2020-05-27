@@ -5,3 +5,16 @@ S
 S->AB
 A->aa
 B->b
+A B C
+a b c
+A
+3
+A->B|C
+B->ba
+C->c|a
+K L
+k l
+K
+2
+L->l
+K->Lk|k

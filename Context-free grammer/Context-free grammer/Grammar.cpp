@@ -265,45 +265,53 @@ void Grammar::addRule(const Rule * r)
 	}
 
 	bool productionCheck = true;
-	if (r->getProduction().size() != 0)
+	if (r->getProduction().size() != 0) // checks if there is any productions
 	{
 		for (size_t i = 0; i < r->getProduction().size(); i++)
 		{
-			for (size_t j = 0; j < r->getProduction()[i].size(); j++)
+			if (r->getProduction()[i].size() != 0) // checks if there is an empty production
 			{
-				if (checkTerminalSet(r->getProduction()[i][j]))
+				for (size_t j = 0; j < r->getProduction()[i].size(); j++)//checks if the production is valid
 				{
-					continue;
-				}
-				else if (checkUpper(r->getProduction()[i][j]))
-				{
-					for (size_t k = 0; k < variables.size(); k++)
+					if (checkTerminalSet(r->getProduction()[i][j])) // if the current char is terminal
 					{
-						if (r->getProduction()[i][j] == variables[k][0])
+						continue;
+					}
+					else if (checkUpper(r->getProduction()[i][j]))//if the current char is an upper letter
+					{
+						for (size_t k = 0; k < variables.size(); k++) // if it is check if the letter is in the set of variables
 						{
-							productionCheck = true;
+							if (r->getProduction()[i][j] == variables[k][0])
+							{
+								productionCheck = true;
+								break;
+							}
+							else
+							{
+								productionCheck = false; //if it is not we make this flag false
+							}
+						}
+
+						if (!productionCheck) 
+						{
 							break;
 						}
-						else
-						{
-							productionCheck = false;
-						}
 					}
-
-					if (!productionCheck)
+					else if (r->getProduction()[i][j] == '$') // this symbol cames from the iter function
 					{
-						break;
+						continue;
+					}
+					else
+					{
+						std::cout << "Incorrect productions.\n";
+						assert(false);
 					}
 				}
-				else if (r->getProduction()[i][j] == '$')
-				{
-					continue;
-				}
-				else
-				{
-					std::cout << "Incorrect productions.\n";
-					assert(false);
-				}
+			}
+			else
+			{
+				std::cout << "Empty production.\n";
+				assert(false);
 			}
 		}
 	}
@@ -319,7 +327,6 @@ void Grammar::addRule(const Rule * r)
 	}
 	else
 	{
-		std::cout << "Incorrect rule."<<variableCheck<<productionCheck<<"\n";
 		assert(false);
 	}
 }
@@ -344,7 +351,7 @@ void Grammar::removeRule(int index)
 	}
 }
 
-void Grammar::save(std::ostream & os)
+void Grammar::save(std::ostream & os)const
 {
 	for (size_t i = 0; i < variables.size()-1; i++)
 	{

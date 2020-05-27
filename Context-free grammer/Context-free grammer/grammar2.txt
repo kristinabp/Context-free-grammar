@@ -1,3 +1,0 @@
-A	B	
-aa	b	a	b	
-A -> aa	B -> b	A -> a | b	
