@@ -20,11 +20,11 @@ bool GrammarSet::checkVariablesSet(const Grammar & first, const Grammar & second
 	return true;
 }
 
-GrammarSet::GrammarSet(): grammarSet(std::vector<Grammar*>())
+GrammarSet::GrammarSet(): grammarSet(std::vector<Grammar*>()), isOpen(false), fileName("")
 {
 }
 
-GrammarSet::GrammarSet(std::vector<Grammar*> grammars)
+GrammarSet::GrammarSet(std::vector<Grammar*> grammars): isOpen(false), fileName("")
 {
 	this->grammarSet = grammars;
 }

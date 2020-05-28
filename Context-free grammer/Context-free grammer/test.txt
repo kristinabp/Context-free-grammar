@@ -1,6 +1,8 @@
-A B
-a b
-A
-2
+S A Z
+a z
+S
+4
+S->a
+S->AS
 A->a
-B->b
+Z->z

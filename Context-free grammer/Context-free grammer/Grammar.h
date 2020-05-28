@@ -49,7 +49,7 @@ public:
 	void addRule(const Rule* r);
 	void removeRule(int index);
 	void save(std::ostream& os)const;
-	void chomsky();
+	void chomsky()const;
 	void iter();
 
 	void print()const;

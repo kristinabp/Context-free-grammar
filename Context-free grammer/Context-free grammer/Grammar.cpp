@@ -60,7 +60,6 @@ Grammar::Grammar() : rules(std::vector<Rule*>()), id("X-X"), variables(std::vect
 
 Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables, const std::vector<char> terminals, const std::string startVariable)
 {
-	this->rules = rules;
 	for (size_t i = 0; i < variables.size(); i++)
 	{
 		if (checkVariable(variables[i]))
@@ -86,52 +85,7 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string>
 			assert(false);
 		}
 	}
-	/*bool check = true;
-	for (size_t i = 0; i < productions.size(); i++)
-	{
-		for (size_t j = 0; j < productions[i].size(); j++)
-		{
-			if (checkTerminal(productions[i][j]))
-			{
-				continue;
-			}
-			else if (checkUpper(productions[i][j]))
-			{
-				for (size_t k = 0; k < variables.size(); k++)
-				{
-					if (productions[i][j] == variables[k][0])
-					{
-						check = true;
-						break;
-					}
-					else
-					{
-						check = false;
-					}
-				}
-				if (!check)
-				{
-					break;
-				}
-			}
-			else
-			{
-				std::cout << "Incorrect terminals(terminal&variable).\n";
-				assert(false);
-			}
-		}
 
-		if (check)
-		{
-			this->productions.push_back(productions[i]);
-		}
-		else
-		{
-			std::cout << "Incorrect terminals(variable does not exist).\n";
-			assert(false);
-		}
-	}
-*/
 	bool flag = false;
 	if (checkUpper(startVariable[0]))
 	{
@@ -155,6 +109,12 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string>
 		std::cout << "Incorrect starting variable.\n";
 		assert(false);
 	}
+
+	for (size_t i = 0; i < rules.size(); i++)
+	{
+		addRule(rules[i]); //validate the rules
+	}
+
 	this->counter++;
 	createId();
 }
@@ -376,20 +336,23 @@ void Grammar::save(std::ostream & os)const
 	}
 }
 
-void Grammar::chomsky()
+void Grammar::chomsky() const
 {
 	bool chomskyCheck = true;
 	for (size_t i = 0; i < rules.size(); i++)
 	{
-		for (size_t k = 0; k < rules[i]->getProduction().size(); k++)
+		if (rules[i]->getProduction().size() < 2) // check if we have more than one production A->BC|a
 		{
-			if (rules[i]->getProduction()[k].size() == 1 && checkTerminal(rules[i]->getProduction()[k][0]))
-			{
+			if (rules[i]->getProduction()[0].size() == 1 && checkTerminal(rules[i]->getProduction()[0][0]))
+			{ //check if the production length is 1 and if it is it should be a terminal A->a
 				chomskyCheck = true;
 			}
-			else if (rules[i]->getProduction()[k].size() == 2 && checkUpper(rules[i]->getProduction()[k][0])
-				&& checkUpper(rules[i]->getProduction()[k][1]))
-			{
+			else if (rules[i]->getProduction()[0].size() == 2 && 
+			(checkUpper(rules[i]->getProduction()[0][0]) && rules[i]->getProduction()[0][0] != startVariable[0]) && 
+			(checkUpper(rules[i]->getProduction()[0][1]) && rules[i]->getProduction()[0][1] != startVariable[0]))
+			{//check if the production length is 2 and if it is it should be two upper cases(here we don't check if they are
+			// from the set of variables because we validate the rules when we add them and here we know that they are valid)
+			// and also this upper cases should be different from the start variable
 				chomskyCheck = true;
 			}
 			else
@@ -398,11 +361,12 @@ void Grammar::chomsky()
 				break;
 			}
 		}
-
-		if (!chomskyCheck)
+		else
 		{
+			chomskyCheck = false;
 			break;
 		}
+
 	}
 
 	if (chomskyCheck)
