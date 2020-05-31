@@ -1,25 +1,5 @@
 #include "GrammarSet.h"
 
-int GrammarSet::counter = 0;
-
-bool GrammarSet::checkVariablesSet(const Grammar & first, const Grammar & second)
-{
-	bool flag = true;
-	for (size_t i = 0; i < first.getVariables().size(); i++)
-	{
-		if (std::find(second.getVariables().begin(), second.getVariables().end(), first.getVariables()[i]) != second.getVariables().end())
-		{
-			continue;
-		}
-		else {
-			return false;
-			break;
-		}
-	}
-
-	return true;
-}
-
 GrammarSet::GrammarSet(): grammarSet(std::vector<Grammar*>()), isOpen(false), fileName("")
 {
 }
@@ -52,7 +32,7 @@ void GrammarSet::help()
 		std::cout << "|addRule <id> <rule> 			adds a new rule\n";
 		std::cout << "|removeRule <id> <n> 			removes a rule with a number\n";
 		std::cout << "|chomsky <id> 			checks whether a grammar is in normal chomsky form\n";
-		std::cout << "|iter <id> 			checks whether a grammar is in normal chomsky form\n";
+		std::cout << "|iter <id> 			    \n";
 		std::cout << "-----------------------------------------------------------------------------------------------\n";
 	}
 	else
@@ -114,7 +94,7 @@ void GrammarSet::open(std::string fileName)
 
 				getline(inputFile, startVariable); // third line - starting variable
 				//creating new grammar to save the current input, because by the current input we will validate the rules
-				Grammar gr({}, variables, terminals, startVariable);
+				Grammar gr({}, variables, terminals, startVariable[0]);
 
 				std::string firstPart, curr;
 				std::vector<std::string> secondPart;
@@ -238,10 +218,11 @@ void GrammarSet::saveAs(std::string fileName)
 	}
 }
 
-void GrammarSet::exit()
+int GrammarSet::exit()
 {
 	std::cout << "> exit\n";
-	std::cout << "Exiting the program...\n";
+	std::cout << "Exiting the program...\n"; 
+	return system("pause");
 }
 
 void GrammarSet::list()
@@ -364,6 +345,7 @@ void GrammarSet::addRule(const std::string id, const std::string rule)
 				if (grammarSet[i]->getId() == id)
 				{
 					findGrammar = true;
+					grammarSet[i]->addNewVariable(firstPart);
 					grammarSet[i]->addRule(new Rule(firstPart, secondPart)); // function addRule checks if the rule is correct
 					break;                                                // if the rule is incorrect it will return error
 				}
@@ -414,85 +396,6 @@ void GrammarSet::removeRule(std::string id, int index)
 		if (!flag)
 		{
 			std::cout << "Incorrect Id.\n";
-		}
-	}
-	else
-	{
-		std::cout << "Please, open a file.\n";
-	}
-}
-
-void GrammarSet::unionn(const std::string & id1, const std::string & id2)
-{
-	if (isOpen)
-	{
-		if (id1 == id2)
-		{
-			std::cout << "Try to union the same grammars.\n";
-			assert(false);
-		}
-		//first step: arrange it so the two grammars have no variables(non-terminals) in common
-
-		Grammar* firstGrammar = nullptr;
-		Grammar* secondGrammar = nullptr;
-		for (size_t i = 0; i < grammarSet.size(); i++)
-		{
-			if (grammarSet[i]->getId() == id1)
-			{
-				firstGrammar = grammarSet[i];
-				break;
-			}
-		}
-
-		for (size_t i = 0; i < grammarSet.size(); i++)
-		{
-			if (grammarSet[i]->getId() == id2)
-			{
-				secondGrammar = grammarSet[i];
-				break;
-			}
-		}
-		this->counter++;
-		std::string newStartingVariable = "S0" + std::to_string(counter);
-		Grammar* newGrammar = new Grammar({}, { newStartingVariable }, firstGrammar->getTerminals(), newStartingVariable);
-
-		//check if terminals sets are equal, if not return error
-		if (firstGrammar->getTerminals() == secondGrammar->getTerminals())
-		{
-			if (checkVariablesSet(*firstGrammar, *secondGrammar))
-			{
-
-			}
-			else
-			{
-				for (size_t i = 0; i < firstGrammar->getVariables().size(); i++)
-				{
-					newGrammar->addNewVariable(firstGrammar->getVariables()[i]);
-				}
-
-				for (size_t i = 0; i < secondGrammar->getVariables().size(); i++)
-				{
-					newGrammar->addNewVariable(secondGrammar->getVariables()[i]);
-				}
-
-				newGrammar->addRule(new Rule(newStartingVariable, { firstGrammar->getStartVariable() , secondGrammar->getStartVariable() }));
-				for (size_t i = 0; i < firstGrammar->getRules().size(); i++)
-				{
-					newGrammar->addRule(firstGrammar->getRules()[i]);
-				}
-
-				for (size_t i = 0; i < secondGrammar->getRules().size(); i++)
-				{
-					newGrammar->addRule(secondGrammar->getRules()[i]);
-				}
-				addGrammar(newGrammar);
-			}
-
-		}
-		else
-		{
-			std::cout << "Not equal terminal sets.\n";
-			assert(false);
 		}
 	}
 	else

@@ -15,13 +15,14 @@ private:
 	std::string id;
 	std::vector <std::string> variables; // A ->
 	std::vector<char> terminals; // alphabet
-	std::string startVariable; 
+	char startVariable; 
 	static int counter;
 
-	bool checkVariable(const std::string ch)const;
-	bool checkTerminal(const char ch)const;
-	bool checkTerminalSet(const char ch)const;
-	bool checkUpper(const char ch) const;
+	bool checkVariable(const std::string& ch)const;
+	bool checkTerminal(const char& ch)const;
+	bool checkTerminalSet(const char& ch)const;
+	bool checkVariablesSet(const char& ch)const;
+	bool checkUpper(const char& ch) const;
 	void copy(const Grammar& other);
 
 	void createId();
@@ -29,7 +30,7 @@ private:
 public:
 	Grammar();
 	Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables,
-		    const std::vector<char> terminals, const std::string startVariable);
+		    const std::vector<char> terminals, const char startVariable);
 	Grammar(const Grammar& other);
 	~Grammar();
 
@@ -39,16 +40,16 @@ public:
 	std::vector<std::string> getVariables()const;
 	std::vector<char> getTerminals()const;
 	std::vector<Rule*> getRules()const;
-	std::string getStartVariable()const;
+	char getStartVariable()const;
 
-	void setStartingVariable(std::string var);
+	void setStartingVariable(const char& var);
 	void addNewVariable(const std::string& var);
 
 	Grammar* clone() const;
 
 	void addRule(const Rule* r);
 	void removeRule(int index);
-	void save(std::ostream& os)const;
+	void save(std::ostream& os);
 	void chomsky()const;
 	void iter();
 

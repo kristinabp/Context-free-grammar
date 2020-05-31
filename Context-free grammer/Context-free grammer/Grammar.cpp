@@ -2,7 +2,7 @@
 
 int Grammar::counter = 0;
 
-bool Grammar::checkTerminal (const char ch) const
+bool Grammar::checkTerminal (const char& ch) const
 {
 	if (ch >= 'a' && ch <= 'z')
 	{
@@ -12,10 +12,13 @@ bool Grammar::checkTerminal (const char ch) const
 	{
 		return true;
 	}
-	else return false;
+	else
+	{
+		return false;
+	}
 }
 
-bool Grammar::checkTerminalSet(const char ch) const
+bool Grammar::checkTerminalSet(const char& ch) const
 {
 	for (size_t i = 0; i < terminals.size(); i++)
 	{
@@ -27,12 +30,24 @@ bool Grammar::checkTerminalSet(const char ch) const
 	return false;
 }
 
-bool Grammar::checkUpper(const char ch) const
+bool Grammar::checkVariablesSet(const char& ch) const
+{
+	for (size_t i = 0; i < variables.size(); i++)
+	{
+		if (ch == variables[i][0])
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Grammar::checkUpper(const char& ch) const
 {
 	return ch >= 'A' && ch <= 'Z';
 }
 
-bool Grammar::checkVariable(const std::string ch) const
+bool Grammar::checkVariable(const std::string& ch) const
 {
 	return ch[0]>='A' && ch[0]<='Z';
 }
@@ -53,12 +68,12 @@ void Grammar::createId()
 }
 
 Grammar::Grammar() : rules(std::vector<Rule*>()), id("X-X"), variables(std::vector<std::string>()), terminals(std::vector<char>()),
-					startVariable("")
+					startVariable()
 {
 	this->counter++;
 }
 
-Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables, const std::vector<char> terminals, const std::string startVariable)
+Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string> variables, const std::vector<char> terminals, const char startVariable)
 {
 	for (size_t i = 0; i < variables.size(); i++)
 	{
@@ -87,11 +102,11 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string>
 	}
 
 	bool flag = false;
-	if (checkUpper(startVariable[0]))
+	if (checkUpper(startVariable))
 	{
 		for (size_t i = 0; i < variables.size(); i++)
 		{
-			if (variables[i][0] == startVariable[0])
+			if (variables[i][0] == startVariable)
 			{
 				this->startVariable = startVariable;
 				flag = true;
@@ -103,6 +118,11 @@ Grammar::Grammar(const std::vector<Rule*>& rules, const std::vector<std::string>
 			std::cout << "Incorrect starting variable.Does not exist in variable set.\n";
 			assert(false);
 		}
+	}
+	else if (startVariable == '$')
+	{
+		this->startVariable = startVariable;
+		flag = true;
 	}
 	else
 	{
@@ -135,7 +155,7 @@ Grammar & Grammar::operator=(const Grammar & other)
 		copy(other);
 	}
 
-return *this;
+	return *this;
 }
 
 std::string Grammar::getId() const
@@ -158,38 +178,23 @@ std::vector<Rule*> Grammar::getRules() const
 	return this->rules;
 }
 
-std::string Grammar::getStartVariable() const
+char Grammar::getStartVariable() const
 {
 	return this->startVariable;
 }
 
-void Grammar::setStartingVariable(std::string var)
+void Grammar::setStartingVariable(const char & var)
 {
-	startVariable = var;
+	this->startVariable = var;
 }
 
 void Grammar::addNewVariable(const std::string & var)
 {
-	this->variables.push_back(var);
+	if (!checkVariablesSet(var[0]))
+	{
+		this->variables.push_back(var);
+	}
 }
-
-//void Grammar::setNewVariableName(size_t index, const char var)
-//{
-//	this->variables[index] = this->variables[index] + '2';
-//
-//	//update terminals with the new variable
-//	for (size_t i = 0; i < terminals.size(); i++)
-//	{
-//		for (size_t j = 0; j < terminals[i].size(); j++)
-//		{
-//			if (terminals[i][j] == var)
-//			{
-//				
-//				terminals[i].insert(j + 1, "2");
-//			}
-//		}
-//	}
-//}
 
 Grammar * Grammar::clone() const
 {
@@ -311,7 +316,7 @@ void Grammar::removeRule(int index)
 	}
 }
 
-void Grammar::save(std::ostream & os)const
+void Grammar::save(std::ostream & os)
 {
 	for (size_t i = 0; i < variables.size()-1; i++)
 	{
@@ -326,7 +331,7 @@ void Grammar::save(std::ostream & os)const
 	os << terminals[terminals.size() - 1 ];
 	os << '\n';
 	os << startVariable;
-	os<< '\n';
+	os << '\n';
 	os << rules.size();
 	os << '\n';
 	for (size_t i = 0; i < rules.size(); i++)
@@ -348,8 +353,8 @@ void Grammar::chomsky() const
 				chomskyCheck = true;
 			}
 			else if (rules[i]->getProduction()[0].size() == 2 && 
-			(checkUpper(rules[i]->getProduction()[0][0]) && rules[i]->getProduction()[0][0] != startVariable[0]) && 
-			(checkUpper(rules[i]->getProduction()[0][1]) && rules[i]->getProduction()[0][1] != startVariable[0]))
+			(checkUpper(rules[i]->getProduction()[0][0]) && rules[i]->getProduction()[0][0] != startVariable) && 
+			(checkUpper(rules[i]->getProduction()[0][1]) && rules[i]->getProduction()[0][1] != startVariable))
 			{//check if the production length is 2 and if it is it should be two upper cases(here we don't check if they are
 			// from the set of variables because we validate the rules when we add them and here we know that they are valid)
 			// and also this upper cases should be different from the start variable
@@ -382,8 +387,8 @@ void Grammar::chomsky() const
 void Grammar::iter()
 {
 	addNewVariable("$");
-	std::string oldStartVariable = getStartVariable();
-	setStartingVariable("$");
+	char oldStartVariable = getStartVariable();
+	setStartingVariable('$');
 	addRule(new Rule("$", { "$" + oldStartVariable }));
 }
 
